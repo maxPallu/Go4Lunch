@@ -1,0 +1,16 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">Go4Lunch</string>
+    <string name="background">background</string>
+    <string name="logo">Logo</string>
+    <string name="Slogan">Find a nice restaurant and invite your co-workers for lunch!</string>
+
+    <!-- FACEBOOK PURPOSE -->
+    <string name="facebook_application_id" translatable="false">1635588596605227</string>
+    <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb1635588596605227</string>
+
+    <!-- BOTTOM NAVIGATION VIEW -->
+    <string name="MapView">Map View</string>
+    <string name="ListView">List View</string>
+    <string name="Workmates">Workmates</string>
+    <string name="i_m_hungry">I\'m Hungry !</string>
+</resources>
