@@ -23,7 +23,7 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public int getFragmentLayout() {
-        return R.layout.activity_main;
+        return R.layout.login_activity;
     }
 
     @OnClick(R.id.login_button)

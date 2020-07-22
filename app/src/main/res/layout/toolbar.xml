@@ -5,4 +5,26 @@
     android:background="@color/colorPrimary"
     android:elevation="4dp">
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:src="@drawable/ic_baseline_menu_24" />
+
+    <TextView
+        android:id="@+id/text_im_hungry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/i_m_hungry"
+        android:textColor="@android:color/white"
+        android:textSize="25sp"
+        android:layout_marginLeft="60dp"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_baseline_search_24"
+        android:background="@color/colorPrimary"
+        android:layout_marginLeft="150dp"/>
+
 </androidx.appcompat.widget.Toolbar>
