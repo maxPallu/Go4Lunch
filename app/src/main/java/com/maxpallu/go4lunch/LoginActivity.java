@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.facebook.login.widget.LoginButton;
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.maxpallu.go4lunch.base.BaseActivity;
 
@@ -22,36 +24,36 @@ public class LoginActivity extends BaseActivity {
     private int RC_SIGN_IN = 1;
 
     @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(this.isCurrentUserLogged()) {
+            this.startMainActivity();
+        }
+    }
+
+    @Override
     public int getFragmentLayout() {
         return R.layout.login_activity;
     }
 
     @OnClick(R.id.login_button)
     public void onClickFacebookLogin() {
-        if(this.isCurrentUserLogged()) {
-            this.startMainActivity();
-        } else {
             this.startFacebookLogin();
-        }
     }
 
     @OnClick(R.id.signInButton)
     public void onClickGoogleSignIn() {
-        if(this.isCurrentUserLogged()) {
-            this.startMainActivity();
-        } else {
             this.startGoogleSign();
-        }
     }
 
     private void startFacebookLogin() {
         startActivityForResult(
                 AuthUI.getInstance()
-                            .createSignInIntentBuilder()
-                            .setAvailableProviders(Collections.singletonList(new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()))
-                            .setIsSmartLockEnabled(false, true)
-                            .build(),
-                            RC_SIGN_IN);
+                        .createSignInIntentBuilder()
+                        .setAvailableProviders(Collections.singletonList(new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()))
+                        .setIsSmartLockEnabled(false, true)
+                        .build(),
+                RC_SIGN_IN);
     }
 
     private void startGoogleSign() {

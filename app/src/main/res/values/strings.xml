@@ -13,4 +13,8 @@
     <string name="ListView">List View</string>
     <string name="Workmates">Workmates</string>
     <string name="i_m_hungry">I\'m Hungry!</string>
+
+    <!-- GOOGLE MAPS API KEY -->
+    <string name="google_maps_API_key">AIzaSyAcRMUsc5zeKZG5sxZz7-dk-CeT7PtudKA</string>
+
 </resources>
