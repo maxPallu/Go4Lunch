@@ -47,6 +47,9 @@ dependencies {
     implementation 'com.jakewharton:butterknife:10.0.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
 
+    // Places
+    implementation 'com.google.android.libraries.places:places:2.3.0'
+
     //FIREBASE AUTH
     implementation "com.google.firebase:firebase-core:17.4.4"
     implementation 'com.firebaseui:firebase-ui-auth:6.2.0'

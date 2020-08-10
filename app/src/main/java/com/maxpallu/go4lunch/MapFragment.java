@@ -17,6 +17,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,6 +26,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.maxpallu.go4lunch.util.PermissionUtils;
 
@@ -34,6 +38,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private boolean permissionDenied = false;
     private GoogleMap mMap;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
 
     public MapFragment() {
 
@@ -71,9 +76,33 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
         mMap.moveCamera(cameraUpdate);
     }
 
+    private void getDeviceLocation() {
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.getContext());
+
+        try {
+            if(permissionDenied == false) {
+                Task location = mFusedLocationProviderClient.getLastLocation();
+                location.addOnCompleteListener(new OnCompleteListener() {
+                    @Override
+                    public void onComplete(@NonNull Task task) {
+                        if(task.isSuccessful()) {
+                            Location currentLocation = (Location) task.getResult();
+
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15));
+                        }
+                    }
+                });
+            }
+        } catch (SecurityException e) {
+
+        }
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        getDeviceLocation();
+        enableMyLocation();
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         LatLng latLng = new LatLng(48.870624, 2.304927);
         googleMap.addMarker(new MarkerOptions().position(latLng).title("Marker in Paris"));
