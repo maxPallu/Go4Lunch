@@ -88,7 +88,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
                         if(task.isSuccessful()) {
                             Location currentLocation = (Location) task.getResult();
 
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15));
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 17));
                         }
                     }
                 });
@@ -104,15 +104,12 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
         getDeviceLocation();
         enableMyLocation();
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
-        LatLng latLng = new LatLng(48.870624, 2.304927);
-        googleMap.addMarker(new MarkerOptions().position(latLng).title("Marker in Paris"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
 
         googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
             @Override
             public boolean onMyLocationButtonClick() {
                 LatLng latLng = new LatLng(mMap.getMyLocation().getLatitude(), mMap.getMyLocation().getLongitude());
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
                 mMap.moveCamera(cameraUpdate);
                 return false;
             }
