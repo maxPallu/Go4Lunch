@@ -57,4 +57,11 @@ dependencies {
     //FACEBOOK LOGIN
     implementation 'com.facebook.android:facebook-android-sdk:4.42.0'
 
+    //GSON
+    implementation 'com.google.code.gson:gson:2.8.6'
+
+    //RETROFIT
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+
 }
