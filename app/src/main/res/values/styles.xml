@@ -7,6 +7,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- TOOLBAR -->
+    <style name="ToolbarStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@android:color/white</item>
+    </style>
+
     <!-- STYLE SIGN-IN ACTIVITY -->
     <style name="LoginTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@android:color/transparent</item>
