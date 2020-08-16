@@ -15,16 +15,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
-import com.maxpallu.go4lunch.views.MyAdapter;
+import com.maxpallu.go4lunch.models.Restaurants;
+import com.maxpallu.go4lunch.util.ApiCalls;
+// import com.maxpallu.go4lunch.views.MyAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners {
+public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners, ApiCalls.Callbacks {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private Restaurants restaurants = new Restaurants();
 
 
     public ListFragment newInstance() {
@@ -32,13 +35,14 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
         return fragment;
     }
 
-    private void executeHttpRequest() {
-        new NetworkAsyncTask( this).execute("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=48.8707,2.3045&radius=1500&type=restaurant&key=AIzaSyAcRMUsc5zeKZG5sxZz7-dk-CeT7PtudKA");
+    private void executeHttpRequestWithRetrofit() {
+        ApiCalls.fetchRestaurant( this, "Hotel Vernet, Champs - Élysées");
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        restaurants.getResults();
     }
 
     @Override
@@ -50,8 +54,15 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
-        this.executeHttpRequest();
+        restaurants.getResults();
         return view;
+    }
+
+    private void updateUIWithRestaurants(List<Restaurants> restaurants) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for(Restaurants restaurant : restaurants) {
+            stringBuilder.append(restaurant.getResults());
+        }
     }
 
     @Override
@@ -66,6 +77,16 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
 
     @Override
     public void onPostExecute(String success) {
+
+    }
+
+    @Override
+    public void onResponse(@Nullable List<Restaurants> restaurants) {
+        if(restaurants != null) this.updateUIWithRestaurants(restaurants);
+    }
+
+    @Override
+    public void onFailure() {
 
     }
 }

@@ -11,30 +11,25 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.maxpallu.go4lunch.R;
-import com.maxpallu.go4lunch.Restaurant;
-
+import com.maxpallu.go4lunch.models.Restaurants;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
-    private ArrayList<Restaurant> mRestaurants;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-    public static class  ViewHolder extends RecyclerView.ViewHolder {
-        public TextView mRestaurantName;
-        public TextView mRestaurantDistance;
-        public TextView mRestaurantType;
-        public TextView mRestaurantAdress;
+public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+
+    private ArrayList<Restaurants> mRestaurants;
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            mRestaurantName = itemView.findViewById(R.id.restaurant_name);
-            mRestaurantDistance = itemView.findViewById(R.id.restaurant_distance);
-            mRestaurantType = itemView.findViewById(R.id.restaurant_type);
-            mRestaurantAdress = itemView.findViewById(R.id.restaurant_adress);
         }
     }
 
-    public MyAdapter(ArrayList<Restaurant> restaurants) {
+    public MyAdapter(ArrayList<Restaurants> restaurants) {
         mRestaurants = restaurants;
     }
 
@@ -46,20 +41,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         return viewHolder;
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Restaurant currentRestaurant = mRestaurants.get(position);
+        Restaurants currentRestaurant = mRestaurants.get(position);
 
-        // final CharSequence restaurantName = Place.Field.
-
-        // holder.mRestaurantName.setText(currentRestaurant.getmName());
-        // holder.mRestaurantDistance.setText(currentRestaurant.getmDistance());
-        // holder.mRestaurantType.setText(currentRestaurant.getmType());
-        // holder.mRestaurantAdress.setText(currentRestaurant.getmAdress());
     }
 
     @Override
     public int getItemCount() {
-        return mRestaurants.size();
+        return 0;
     }
 }
