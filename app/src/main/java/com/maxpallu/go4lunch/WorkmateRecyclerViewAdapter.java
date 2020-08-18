@@ -44,7 +44,7 @@ public class WorkmateRecyclerViewAdapter extends RecyclerView.Adapter<WorkmateRe
         return mWorkmates.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.workmate_avatar)
         public ImageView mWorkmateAvatar;
         @BindView(R.id.workmate_name)

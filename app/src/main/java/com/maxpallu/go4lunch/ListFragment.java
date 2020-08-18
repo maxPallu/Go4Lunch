@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,7 +18,7 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.maxpallu.go4lunch.models.Restaurants;
 import com.maxpallu.go4lunch.util.ApiCalls;
-// import com.maxpallu.go4lunch.views.MyAdapter;
+import com.maxpallu.go4lunch.views.MyAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,12 +37,13 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
     }
 
     private void executeHttpRequestWithRetrofit() {
-        ApiCalls.fetchRestaurant( this, "Hotel Vernet, Champs - Élysées");
+        ApiCalls.fetchRestaurant( this);
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.executeHttpRequestWithRetrofit();
         restaurants.getResults();
     }
 
@@ -54,15 +56,14 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
+        this.executeHttpRequestWithRetrofit();
         restaurants.getResults();
         return view;
     }
 
-    private void updateUIWithRestaurants(List<Restaurants> restaurants) {
+    private void updateUIWithRestaurants(Restaurants restaurants) {
         StringBuilder stringBuilder = new StringBuilder();
-        for(Restaurants restaurant : restaurants) {
-            stringBuilder.append(restaurant.getResults());
-        }
+        stringBuilder.append(restaurants.getResults());
     }
 
     @Override
@@ -81,7 +82,7 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
     }
 
     @Override
-    public void onResponse(@Nullable List<Restaurants> restaurants) {
+    public void onResponse(@Nullable Restaurants restaurants) {
         if(restaurants != null) this.updateUIWithRestaurants(restaurants);
     }
 
