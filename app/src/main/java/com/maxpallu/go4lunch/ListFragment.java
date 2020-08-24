@@ -1,6 +1,8 @@
 package com.maxpallu.go4lunch;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,16 +14,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.maxpallu.go4lunch.models.Restaurants;
+import com.maxpallu.go4lunch.models.Result;
 import com.maxpallu.go4lunch.util.ApiCalls;
 import com.maxpallu.go4lunch.views.MyAdapter;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners, ApiCalls.Callbacks {
+
+public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners, ApiCalls.Callbacks, Serializable {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private Restaurants mRestaurants = new Restaurants();
+    private List<Result> mResults;
 
 
     public ListFragment newInstance() {
@@ -39,7 +47,7 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
         super.onCreate(savedInstanceState);
         this.executeHttpRequestWithRetrofit();
         this.updateUIWithRestaurants(mRestaurants);
-        mRestaurants.getResults();
+        mResults = mRestaurants.getResults();
     }
 
     @Override
@@ -66,6 +74,13 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
         stringBuilder.append(restaurants.getResults());
     }
 
+    public void sendResults() {
+        Intent intent = new Intent(this.getContext(), MyAdapter.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("Results", (Serializable) mResults);
+        intent.putExtras(bundle);
+    }
+
     @Override
     public void onPreExecute() {
 
@@ -86,6 +101,8 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
         if(restaurants != null) {
             this.updateUIWithRestaurants(restaurants);
             mRestaurants = restaurants;
+            mResults = restaurants.getResults();
+            sendResults();
         }
     }
 

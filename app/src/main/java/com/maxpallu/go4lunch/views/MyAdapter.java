@@ -1,5 +1,9 @@
 package com.maxpallu.go4lunch.views;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,19 +12,21 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
+import com.maxpallu.go4lunch.ListFragment;
 import com.maxpallu.go4lunch.R;
 import com.maxpallu.go4lunch.models.Restaurants;
+import com.maxpallu.go4lunch.models.Result;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
+    private List<Result> mResults = new ArrayList<Result>();
     private Restaurants mRestaurants;
+    private Intent intent;
+    private Context context;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -36,7 +42,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     public MyAdapter(Restaurants restaurants) {
         mRestaurants = restaurants;
+        updateResults();
     }
+
 
     @NonNull
     @Override
@@ -46,14 +54,22 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         return viewHolder;
     }
 
+    public void updateResults() {
+        Bundle bundle = ((Activity) context).getIntent().getExtras();
+        mResults = ((List<Result>) bundle.getSerializable("Results"));
+    }
+
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Restaurants currentRestaurant = mRestaurants;
+        updateResults();
+        List<Result> currentRestaurant = mResults;
+
+        holder.restaurantName.setText(currentRestaurant.get(position).getName());
     }
 
     @Override
     public int getItemCount() {
-        return 1;
+        return mResults.size();
     }
 }
