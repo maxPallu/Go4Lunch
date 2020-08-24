@@ -9,7 +9,7 @@
         android:id="@+id/restaurant_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Le Zinc"
+        android:text="Test"
         android:layout_marginLeft="20dp"
         android:textStyle="bold" />
 
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="250dp"
         android:layout_toEndOf="@+id/restaurant_name"
-        android:text="120m" />
+        android:text="Test" />
 
     <TextView
         android:id="@+id/restaurant_type"
@@ -28,7 +28,7 @@
         android:layout_alignBottom="@+id/restaurant_name"
         android:layout_marginLeft="20dp"
         android:layout_marginBottom="-25dp"
-        android:text="French" />
+        android:text="Test" />
 
     <TextView
         android:id="@+id/restaurant_adress"
@@ -37,6 +37,6 @@
         android:layout_marginStart="25dp"
         android:layout_marginTop="24dp"
         android:layout_toEndOf="@+id/restaurant_type"
-        android:text="12 Rue Ana" />
+        android:text="Test" />
 
 </RelativeLayout>

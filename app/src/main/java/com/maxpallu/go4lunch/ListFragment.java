@@ -1,11 +1,9 @@
 package com.maxpallu.go4lunch;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,22 +11,17 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.PlacesClient;
 import com.maxpallu.go4lunch.models.Restaurants;
 import com.maxpallu.go4lunch.util.ApiCalls;
 import com.maxpallu.go4lunch.views.MyAdapter;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners, ApiCalls.Callbacks {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private Restaurants restaurants = new Restaurants();
+    private Restaurants mRestaurants = new Restaurants();
 
 
     public ListFragment newInstance() {
@@ -38,13 +31,15 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
 
     private void executeHttpRequestWithRetrofit() {
         ApiCalls.fetchRestaurant( this);
+        this.updateUIWithRestaurants(mRestaurants);
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.executeHttpRequestWithRetrofit();
-        restaurants.getResults();
+        this.updateUIWithRestaurants(mRestaurants);
+        mRestaurants.getResults();
     }
 
     @Override
@@ -56,8 +51,13 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
+        mRecyclerView = view.findViewById(R.id.list_recycler_view);
+        mLayoutManager = new LinearLayoutManager(this.getContext());
+        mAdapter = new MyAdapter(mRestaurants);
+
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
         this.executeHttpRequestWithRetrofit();
-        restaurants.getResults();
         return view;
     }
 
@@ -83,7 +83,10 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
 
     @Override
     public void onResponse(@Nullable Restaurants restaurants) {
-        if(restaurants != null) this.updateUIWithRestaurants(restaurants);
+        if(restaurants != null) {
+            this.updateUIWithRestaurants(restaurants);
+            mRestaurants = restaurants;
+        }
     }
 
     @Override

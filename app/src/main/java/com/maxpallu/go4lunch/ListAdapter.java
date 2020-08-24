@@ -12,7 +12,7 @@ import com.maxpallu.go4lunch.models.Restaurants;
 
 import java.util.List;
 
-public class ListAdapter extends RecyclerView.Adapter<WorkmateRecyclerViewAdapter.ViewHolder> {
+public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
     private List<Restaurants> mRestaurant;
 
@@ -34,17 +34,17 @@ public class ListAdapter extends RecyclerView.Adapter<WorkmateRecyclerViewAdapte
 
     @NonNull
     @Override
-    public WorkmateRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_list_item, parent, false);
-        WorkmateRecyclerViewAdapter.ViewHolder vh = new WorkmateRecyclerViewAdapter.ViewHolder(v);
+        ListAdapter.ViewHolder vh = new ListAdapter.ViewHolder(v);
         return vh;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull WorkmateRecyclerViewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Restaurants currentRestaurant = mRestaurant.get(position);
 
-        holder.mWorkmateName.setText(currentRestaurant.getResults().toString());
+        holder.restaurantName.setText(currentRestaurant.getResults().toString());
     }
 
     @Override

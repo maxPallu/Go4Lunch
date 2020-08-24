@@ -20,16 +20,21 @@ import butterknife.ButterKnife;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
-    private ArrayList<Restaurants> mRestaurants;
+    private Restaurants mRestaurants;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
+        private TextView restaurantName;
+        private TextView restaurantAdress;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            restaurantName = itemView.findViewById(R.id.restaurant_name);
+            restaurantAdress = itemView.findViewById(R.id.restaurant_adress);
         }
     }
 
-    public MyAdapter(ArrayList<Restaurants> restaurants) {
+    public MyAdapter(Restaurants restaurants) {
         mRestaurants = restaurants;
     }
 
@@ -44,12 +49,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Restaurants currentRestaurant = mRestaurants.get(position);
-
+        Restaurants currentRestaurant = mRestaurants;
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return 1;
     }
 }
