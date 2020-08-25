@@ -26,11 +26,11 @@ import java.util.List;
 public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners, ApiCalls.Callbacks, Serializable {
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private Restaurants mRestaurants = new Restaurants();
     private List<Result> mResults;
-
+    private MyAdapter mAdapter = new MyAdapter(mRestaurants);
+    ;
 
     public ListFragment newInstance() {
         ListFragment fragment = new ListFragment();
@@ -61,7 +61,6 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
         View view = inflater.inflate(R.layout.fragment_list, container, false);
         mRecyclerView = view.findViewById(R.id.list_recycler_view);
         mLayoutManager = new LinearLayoutManager(this.getContext());
-        mAdapter = new MyAdapter(mRestaurants);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
@@ -70,15 +69,7 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
     }
 
     private void updateUIWithRestaurants(Restaurants restaurants) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(restaurants.getResults());
-    }
-
-    public void sendResults() {
-        Intent intent = new Intent(this.getContext(), MyAdapter.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("Results", (Serializable) mResults);
-        intent.putExtras(bundle);
+        mAdapter.updateResults(restaurants.getResults());
     }
 
     @Override
@@ -102,7 +93,6 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
             this.updateUIWithRestaurants(restaurants);
             mRestaurants = restaurants;
             mResults = restaurants.getResults();
-            sendResults();
         }
     }
 

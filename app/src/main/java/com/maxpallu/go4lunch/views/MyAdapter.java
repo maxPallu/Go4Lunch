@@ -42,7 +42,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     public MyAdapter(Restaurants restaurants) {
         mRestaurants = restaurants;
-        updateResults();
     }
 
 
@@ -54,15 +53,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         return viewHolder;
     }
 
-    public void updateResults() {
-        Bundle bundle = ((Activity) context).getIntent().getExtras();
-        mResults = ((List<Result>) bundle.getSerializable("Results"));
+    public void updateResults(List<Result> results) {
+        mResults.clear();
+        mResults.addAll(results);
+        notifyDataSetChanged();
     }
 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        updateResults();
         List<Result> currentRestaurant = mResults;
 
         holder.restaurantName.setText(currentRestaurant.get(position).getName());
