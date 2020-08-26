@@ -39,14 +39,12 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
 
     private void executeHttpRequestWithRetrofit() {
         ApiCalls.fetchRestaurant( this);
-        this.updateUIWithRestaurants(mRestaurants);
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.executeHttpRequestWithRetrofit();
-        this.updateUIWithRestaurants(mRestaurants);
         mResults = mRestaurants.getResults();
     }
 

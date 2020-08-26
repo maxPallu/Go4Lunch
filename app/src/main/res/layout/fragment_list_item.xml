@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="100dp">
 
     <TextView
         android:id="@+id/restaurant_name"
@@ -17,26 +16,34 @@
         android:id="@+id/restaurant_distance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="250dp"
+        android:layout_marginStart="125dp"
         android:layout_toEndOf="@+id/restaurant_name"
         android:text="Test" />
 
     <TextView
-        android:id="@+id/restaurant_type"
+        android:id="@+id/restaurant_hours"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/restaurant_name"
         android:layout_marginLeft="20dp"
-        android:layout_marginBottom="-25dp"
+        android:layout_marginBottom="-35dp"
         android:text="Test" />
 
     <TextView
         android:id="@+id/restaurant_adress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="24dp"
-        android:layout_toEndOf="@+id/restaurant_type"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="35dp"
+        android:layout_toEndOf="@+id/restaurant_hours"
         android:text="Test" />
+
+
+    <ImageView
+        android:id="@+id/restaurant_picture"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_toEndOf="@+id/restaurant_distance"
+        android:layout_marginStart="25dp"/>
 
 </RelativeLayout>

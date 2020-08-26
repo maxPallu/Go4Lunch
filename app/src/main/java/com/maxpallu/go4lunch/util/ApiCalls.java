@@ -5,7 +5,6 @@ import androidx.annotation.Nullable;
 import com.maxpallu.go4lunch.models.Restaurants;
 
 import java.lang.ref.WeakReference;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -19,6 +18,7 @@ public class ApiCalls {
     }
 
     public static void fetchRestaurant(Callbacks callbacks) {
+
         final WeakReference<Callbacks> callbacksWeakReference = new WeakReference<Callbacks>(callbacks);
 
         RestaurantService restaurantService = RestaurantService.retrofit.create(RestaurantService.class);
