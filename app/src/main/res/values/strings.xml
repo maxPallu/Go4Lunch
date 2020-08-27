@@ -2,7 +2,7 @@
     <string name="app_name">Go4Lunch</string>
     <string name="background">background</string>
     <string name="logo">Logo</string>
-    <string name="Slogan">Find a nice restaurant and invite your co-workers for lunch!</string>
+    <string name="Slogan" translatable="false">Find a nice restaurant and invite your co-workers for lunch!</string>
 
     <!-- FACEBOOK PURPOSE -->
     <string name="facebook_application_id" translatable="false">1635588596605227</string>
@@ -27,5 +27,18 @@
 
     <string name="info_no_email_found">No email was found</string>
     <string name="info_no_username_found">No username was found</string>
+    <string name="your_lunch">Your Lunch</string>
+    <string name="settings">Settings</string>
+    <string name="logout">Logout</string>
+    <string name="Open">Open</string>
+    <string name="Close">Close</string>
+
+    <!-- Language Spinner -->
+    <string-array name="Language">
+        <item>Français</item>
+        <item>English</item>
+    </string-array>
+    <string name="gestion_des_notifications">Notifications management :</string>
+    <string name="choix_de_la_langue">Language selection :</string>
 
 </resources>

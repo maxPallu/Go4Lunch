@@ -78,9 +78,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         holder.restaurantName.setText(currentRestaurant.get(position).getName());
         if(currentRestaurant.get(position).getBusinessStatus().contains("OPERATIONAL")) {
-            holder.restaurantHours.setText("Open");
+            holder.restaurantHours.setText(R.string.Open);
         } else {
-            holder.restaurantHours.setText("Close");
+            holder.restaurantHours.setText(R.string.Close);
         }
 
         holder.restaurantAdress.setText(" -  "+currentRestaurant.get(position).getVicinity());
