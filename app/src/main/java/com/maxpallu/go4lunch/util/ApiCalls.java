@@ -25,6 +25,8 @@ public class ApiCalls {
 
         Call<Restaurants> call = restaurantService.getRestaurants();
 
+        // Call<Restaurants> callDetails = restaurantService.getDetails();
+
         call.enqueue(new Callback<Restaurants>() {
             @Override
             public void onResponse(Call<Restaurants> call, Response<Restaurants> response) {

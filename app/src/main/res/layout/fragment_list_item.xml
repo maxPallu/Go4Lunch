@@ -17,8 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="125dp"
-        android:layout_toEndOf="@+id/restaurant_name"
-        android:text="Test" />
+        android:layout_toEndOf="@+id/restaurant_name" />
 
     <TextView
         android:id="@+id/restaurant_hours"

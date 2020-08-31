@@ -7,13 +7,14 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface RestaurantService {
 
     @GET("maps/api/place/nearbysearch/json?location=48.8707,2.3045&radius=1000&type=restaurant&key=AIzaSyAcRMUsc5zeKZG5sxZz7-dk-CeT7PtudKA")
     Call<Restaurants> getRestaurants();
-    @GET("maps/api/place/details/json?place_id={place_id}&fields=opening_hours, user_ratings_total, icon&key=AIzaSyAcRMUsc5zeKZG5sxZz7-dk-CeT7PtudKA")
-    Call<Restaurants> getDetails(@Path("place_id") String placeId);
+    @GET("maps/api/place/details/json?fields=opening_hours, user_ratings_total, icon&key=AIzaSyAcRMUsc5zeKZG5sxZz7-dk-CeT7PtudKA")
+    Call<Restaurants> getDetails(@Query("place_id") String placeId);
 
     public static final Retrofit retrofit = new Retrofit.Builder()
                                                 .baseUrl("https://maps.googleapis.com")

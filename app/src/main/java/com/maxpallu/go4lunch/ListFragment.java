@@ -16,11 +16,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.maxpallu.go4lunch.models.Restaurants;
 import com.maxpallu.go4lunch.models.Result;
 import com.maxpallu.go4lunch.util.ApiCalls;
+import com.maxpallu.go4lunch.util.RestaurantService;
 import com.maxpallu.go4lunch.views.MyAdapter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
 
 
 public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners, ApiCalls.Callbacks, Serializable {
@@ -29,8 +32,9 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
     private RecyclerView.LayoutManager mLayoutManager;
     private Restaurants mRestaurants = new Restaurants();
     private List<Result> mResults;
+    private List<Result> mDetails;
     private MyAdapter mAdapter = new MyAdapter(mRestaurants);
-    ;
+    RestaurantService restaurantService = RestaurantService.retrofit.create(RestaurantService.class);
 
     public ListFragment newInstance() {
         ListFragment fragment = new ListFragment();
@@ -90,7 +94,7 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
         if(restaurants != null) {
             this.updateUIWithRestaurants(restaurants);
             mRestaurants = restaurants;
-            mResults = restaurants.getResults();
+            restaurantService.getDetails(mRestaurants.getResults().get(0).getPlaceId());
         }
     }
 
