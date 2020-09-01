@@ -13,6 +13,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.maxpallu.go4lunch.models.DetailsResult;
+import com.maxpallu.go4lunch.models.PlaceDetailsResponse;
 import com.maxpallu.go4lunch.models.Restaurants;
 import com.maxpallu.go4lunch.models.Result;
 import com.maxpallu.go4lunch.util.ApiCalls;
@@ -31,8 +33,9 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private Restaurants mRestaurants = new Restaurants();
+    private PlaceDetailsResponse mDetails = new PlaceDetailsResponse();
     private List<Result> mResults;
-    private List<Result> mDetails;
+    private List<DetailsResult> mDetailsResults = new ArrayList<>();
     private MyAdapter mAdapter = new MyAdapter(mRestaurants);
     RestaurantService restaurantService = RestaurantService.retrofit.create(RestaurantService.class);
 
@@ -50,6 +53,7 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
         super.onCreate(savedInstanceState);
         this.executeHttpRequestWithRetrofit();
         mResults = mRestaurants.getResults();
+        mDetailsResults.add(mDetails.getResult());
     }
 
     @Override
@@ -74,6 +78,10 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
         mAdapter.updateResults(restaurants.getResults());
     }
 
+    private void updateUIWithDetails(PlaceDetailsResponse response) {
+        mAdapter.updateDetails(response.getResult());
+    }
+
     @Override
     public void onPreExecute() {
 
@@ -90,13 +98,21 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
     }
 
     @Override
+    public void onDetailsResponse(PlaceDetailsResponse placeDetailsResponse) {
+        this.updateUIWithDetails(placeDetailsResponse);
+        mDetails = placeDetailsResponse;
+    }
+
+    @Override
     public void onResponse(@Nullable Restaurants restaurants) {
         if(restaurants != null) {
             this.updateUIWithRestaurants(restaurants);
             mRestaurants = restaurants;
-            restaurantService.getDetails(mRestaurants.getResults().get(0).getPlaceId());
+
         }
     }
+
+
 
     @Override
     public void onFailure() {

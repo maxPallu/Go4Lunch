@@ -2,6 +2,7 @@ package com.maxpallu.go4lunch.util;
 
 import androidx.annotation.Nullable;
 
+import com.maxpallu.go4lunch.models.PlaceDetailsResponse;
 import com.maxpallu.go4lunch.models.Restaurants;
 
 import java.lang.ref.WeakReference;
@@ -13,6 +14,7 @@ import retrofit2.Response;
 public class ApiCalls {
 
     public interface Callbacks {
+        void onDetailsResponse(PlaceDetailsResponse placeDetailsResponse);
         void onResponse(@Nullable Restaurants restaurants);
         void onFailure();
     }
@@ -25,7 +27,21 @@ public class ApiCalls {
 
         Call<Restaurants> call = restaurantService.getRestaurants();
 
-        // Call<Restaurants> callDetails = restaurantService.getDetails();
+        Call<PlaceDetailsResponse> callDetails = restaurantService.getDetails();
+
+        callDetails.enqueue(new Callback<PlaceDetailsResponse>() {
+            @Override
+            public void onResponse(Call<PlaceDetailsResponse> call, Response<PlaceDetailsResponse> response) {
+                if(callbacksWeakReference.get() != null) {
+                    callbacksWeakReference.get().onDetailsResponse(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PlaceDetailsResponse> call, Throwable t) {
+                if (callbacksWeakReference.get() != null) callbacksWeakReference.get().onFailure();
+            }
+        });
 
         call.enqueue(new Callback<Restaurants>() {
             @Override

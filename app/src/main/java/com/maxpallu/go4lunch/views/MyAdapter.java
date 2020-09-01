@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.maxpallu.go4lunch.ListFragment;
 import com.maxpallu.go4lunch.R;
+import com.maxpallu.go4lunch.models.DetailsResult;
 import com.maxpallu.go4lunch.models.OpeningHours;
 import com.maxpallu.go4lunch.models.Photo;
 import com.maxpallu.go4lunch.models.Restaurants;
@@ -31,6 +32,7 @@ import java.util.List;
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     private List<Result> mResults = new ArrayList<Result>();
+    private List<DetailsResult> mDetails = new ArrayList<>();
     private Restaurants mRestaurants;
     private Context context;
 
@@ -39,6 +41,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         private TextView restaurantName;
         private TextView restaurantAdress;
         private TextView restaurantHours;
+        private TextView restaurantDistance;
         private ImageView resturantPicture;
 
         public ViewHolder(@NonNull View itemView) {
@@ -47,6 +50,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             restaurantAdress = itemView.findViewById(R.id.restaurant_adress);
             restaurantHours = itemView.findViewById(R.id.restaurant_hours);
             resturantPicture = itemView.findViewById(R.id.restaurant_picture);
+            restaurantDistance = itemView.findViewById(R.id.restaurant_distance);
         }
     }
 
@@ -70,6 +74,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
+    public void updateDetails(DetailsResult result) {
+        mDetails.add(result);
+        notifyDataSetChanged();
+    }
 
 
     @Override
@@ -84,6 +92,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         //}
 
         holder.restaurantAdress.setText(" -  "+currentRestaurant.get(position).getVicinity());
+
+        holder.restaurantDistance.setText(mDetails.get(1).getFormattedPhoneNumber());
 
         Glide.with(context.getApplicationContext()).load(currentRestaurant.get(position).getPhotos()).into(holder.resturantPicture);
     }
