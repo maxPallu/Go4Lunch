@@ -1,11 +1,7 @@
 package com.maxpallu.go4lunch.views;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.maxpallu.go4lunch.ListFragment;
+import com.maxpallu.go4lunch.DetailActivity;
 import com.maxpallu.go4lunch.R;
 import com.maxpallu.go4lunch.models.DetailsResult;
-import com.maxpallu.go4lunch.models.OpeningHours;
-import com.maxpallu.go4lunch.models.Photo;
 import com.maxpallu.go4lunch.models.Restaurants;
 import com.maxpallu.go4lunch.models.Result;
-import com.maxpallu.go4lunch.util.ApiCalls;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,9 +86,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         holder.restaurantAdress.setText(" -  "+currentRestaurant.get(position).getVicinity());
 
-        holder.restaurantDistance.setText(mDetails.get(1).getFormattedPhoneNumber());
+//        holder.restaurantDistance.setText(mDetails.get(1).getFormattedPhoneNumber());
 
         Glide.with(context.getApplicationContext()).load(currentRestaurant.get(position).getPhotos()).into(holder.resturantPicture);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent detailsActivity = new Intent(v.getContext(), DetailActivity.class);
+                v.getContext().startActivity(detailsActivity);
+            }
+        });
     }
 
     @Override
