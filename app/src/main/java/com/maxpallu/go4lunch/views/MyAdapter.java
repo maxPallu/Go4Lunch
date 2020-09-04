@@ -2,9 +2,12 @@ package com.maxpallu.go4lunch.views;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,13 +21,15 @@ import com.maxpallu.go4lunch.models.DetailsResult;
 import com.maxpallu.go4lunch.models.Restaurants;
 import com.maxpallu.go4lunch.models.Result;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implements Filterable {
 
     private List<Result> mResults = new ArrayList<Result>();
+    private List<Result> mResultsFull;
     private List<DetailsResult> mDetails = new ArrayList<>();
     private Restaurants mRestaurants;
     private Context context;
@@ -49,6 +54,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     public MyAdapter(Restaurants restaurants) {
         mRestaurants = restaurants;
+        mResultsFull = new ArrayList<>(mResults);
     }
 
 
@@ -68,6 +74,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     public void updateDetails(DetailsResult result) {
+        mDetails.clear();
         mDetails.add(result);
         notifyDataSetChanged();
     }
@@ -76,24 +83,24 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         List<Result> currentRestaurant = mResults;
+        List<DetailsResult> currentDetail = mDetails;
 
         holder.restaurantName.setText(currentRestaurant.get(position).getName());
-        //if(currentRestaurant.get(position).getBusinessStatus().contains("OPERATIONAL")) {
-            holder.restaurantHours.setText(R.string.Open);
-        //} else {
-        //    holder.restaurantHours.setText(R.string.Close);
-        //}
 
-        holder.restaurantAdress.setText(" -  "+currentRestaurant.get(position).getVicinity());
+        holder.restaurantHours.setText(R.string.Open);
 
-//        holder.restaurantDistance.setText(mDetails.get(1).getFormattedPhoneNumber());
+        holder.restaurantAdress.setText(" -  "+currentDetail.get(0).getFormattedPhoneNumber());
 
-        Glide.with(context.getApplicationContext()).load(currentRestaurant.get(position).getPhotos()).into(holder.resturantPicture);
+        Glide.with(context.getApplicationContext()).load(currentRestaurant.get(position).getPhotos().get(0)).into(holder.resturantPicture);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent detailsActivity = new Intent(v.getContext(), DetailActivity.class);
+
+                detailsActivity.putExtra("restaurantName", currentRestaurant.get(position).getName());
+                detailsActivity.putExtra("restaurantAdress", currentRestaurant.get(position).getVicinity());
+
                 v.getContext().startActivity(detailsActivity);
             }
         });
@@ -103,4 +110,41 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public int getItemCount() {
         return mResults.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return myFilter;
+    }
+
+    private Filter myFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Result> filteredList = new ArrayList<>();
+
+            if(constraint == null || constraint.length() == 0) {
+                filteredList.addAll(mResultsFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (Result result : mResultsFull) {
+                    if(result.getName().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(result);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            mResults.clear();
+            mResults.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
+
 }

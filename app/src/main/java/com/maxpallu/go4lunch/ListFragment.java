@@ -34,10 +34,7 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
     private RecyclerView.LayoutManager mLayoutManager;
     private Restaurants mRestaurants = new Restaurants();
     private PlaceDetailsResponse mDetails = new PlaceDetailsResponse();
-    private List<Result> mResults;
-    private List<DetailsResult> mDetailsResults = new ArrayList<>();
     private MyAdapter mAdapter = new MyAdapter(mRestaurants);
-    RestaurantService restaurantService = RestaurantService.retrofit.create(RestaurantService.class);
 
     public ListFragment newInstance() {
         ListFragment fragment = new ListFragment();
@@ -52,8 +49,6 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.executeHttpRequestWithRetrofit();
-        mResults = mRestaurants.getResults();
-        mDetailsResults.add(mDetails.getResult());
     }
 
     @Override
@@ -99,20 +94,20 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
 
     @Override
     public void onDetailsResponse(PlaceDetailsResponse placeDetailsResponse) {
-        this.updateUIWithDetails(placeDetailsResponse);
-        mDetails = placeDetailsResponse;
+        if(placeDetailsResponse != null) {
+            this.updateUIWithDetails(placeDetailsResponse);
+            mDetails = placeDetailsResponse;
+        }
     }
 
     @Override
     public void onResponse(@Nullable Restaurants restaurants) {
         if(restaurants != null) {
             this.updateUIWithRestaurants(restaurants);
+            this.updateUIWithDetails(mDetails);
             mRestaurants = restaurants;
-
         }
     }
-
-
 
     @Override
     public void onFailure() {

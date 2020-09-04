@@ -27,28 +27,25 @@ public class ApiCalls {
 
         Call<Restaurants> call = restaurantService.getRestaurants();
 
-        Call<PlaceDetailsResponse> callDetails = restaurantService.getDetails();
-
-        callDetails.enqueue(new Callback<PlaceDetailsResponse>() {
-            @Override
-            public void onResponse(Call<PlaceDetailsResponse> call, Response<PlaceDetailsResponse> response) {
-                if(callbacksWeakReference.get() != null) {
-                    callbacksWeakReference.get().onDetailsResponse(response.body());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<PlaceDetailsResponse> call, Throwable t) {
-                if (callbacksWeakReference.get() != null) callbacksWeakReference.get().onFailure();
-            }
-        });
-
         call.enqueue(new Callback<Restaurants>() {
             @Override
             public void onResponse(Call<Restaurants> call, Response<Restaurants> response) {
                 if(callbacksWeakReference.get() != null) {
-                    callbacksWeakReference.get().onResponse(response.body());
-                }
+                      //  callbacksWeakReference.get().onResponse(response.body());
+                        Call<PlaceDetailsResponse> callDetails = restaurantService.getDetails(response.body().getResults().get(0).getPlaceId());
+                        callDetails.enqueue(new Callback<PlaceDetailsResponse>() {
+                            @Override
+                            public void onResponse(Call<PlaceDetailsResponse> call, Response<PlaceDetailsResponse> response) {
+                                callbacksWeakReference.get().onDetailsResponse(response.body());
+                            }
+
+                            @Override
+                            public void onFailure(Call<PlaceDetailsResponse> call, Throwable t) {
+                                if(callbacksWeakReference.get() != null) callbacksWeakReference.get().onFailure();
+                            }
+                        });
+
+                    }
             }
 
             @Override
