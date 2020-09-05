@@ -74,7 +74,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
     }
 
     public void updateDetails(DetailsResult result) {
-        mDetails.clear();
         mDetails.add(result);
         notifyDataSetChanged();
     }
@@ -89,7 +88,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
 
         holder.restaurantHours.setText(R.string.Open);
 
-        holder.restaurantAdress.setText(" -  "+currentDetail.get(0).getFormattedPhoneNumber());
+        if(currentDetail == null) {
+            holder.restaurantAdress.setText("Aucune adresse");
+        } else {
+            holder.restaurantAdress.setText(" -  "+currentDetail.get(0).getFormattedPhoneNumber());
+        }
 
         Glide.with(context.getApplicationContext()).load(currentRestaurant.get(position).getPhotos().get(0)).into(holder.resturantPicture);
 
