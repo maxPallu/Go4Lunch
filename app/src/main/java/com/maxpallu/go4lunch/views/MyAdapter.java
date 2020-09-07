@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.maxpallu.go4lunch.DetailActivity;
 import com.maxpallu.go4lunch.R;
 import com.maxpallu.go4lunch.models.DetailsResult;
@@ -94,9 +95,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
             holder.restaurantDistance.setText("Aucun avis");
         } else {
             holder.restaurantDistance.setText(" -  "+currentDetail.get(0).getRating().toString());
+            Glide.with(context.getApplicationContext()).load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&maxheight=800&photoreference=" + currentRestaurant.get(position).getPhotos().get(0).getPhotoReference() +"&key=AIzaSyAcRMUsc5zeKZG5sxZz7-dk-CeT7PtudKA")
+                    .apply(RequestOptions.centerCropTransform())
+                    .into(holder.resturantPicture);
         }
-
-        // Glide.with(context.getApplicationContext()).load(currentDetail.get(0).getIcon()).into(holder.resturantPicture);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,6 +107,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
 
                 detailsActivity.putExtra("restaurantName", currentRestaurant.get(position).getName());
                 detailsActivity.putExtra("restaurantAdress", currentRestaurant.get(position).getVicinity());
+                detailsActivity.putExtra("restaurantPicture", "https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&maxheight=800&photoreference=" + currentRestaurant.get(position).getPhotos().get(0).getPhotoReference() +"&key=AIzaSyAcRMUsc5zeKZG5sxZz7-dk-CeT7PtudKA");
 
                 v.getContext().startActivity(detailsActivity);
             }

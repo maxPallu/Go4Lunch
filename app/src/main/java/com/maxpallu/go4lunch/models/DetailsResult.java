@@ -61,6 +61,17 @@ public class DetailsResult {
     @SerializedName("website")
     @Expose
     private String website;
+    @SerializedName("photos")
+    @Expose
+    private List<Photo> photos;
+
+    public List<Photo> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<Photo> photos) {
+        this.photos = photos;
+    }
 
     public List<AddressComponent> getAddressComponents() {
         return addressComponents;
