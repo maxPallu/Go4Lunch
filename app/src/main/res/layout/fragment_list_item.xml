@@ -1,47 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="100dp">
+    android:layout_height="115dp">
 
     <TextView
         android:id="@+id/restaurant_name"
-        android:layout_width="175dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
         android:text="Test"
-        android:layout_marginLeft="20dp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintBaseline_toBaselineOf="@+id/restaurant_distance"
+        app:layout_constraintEnd_toStartOf="@+id/restaurant_distance"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/restaurant_distance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="125dp"
-        android:layout_toEndOf="@+id/restaurant_name" />
+        android:layout_marginStart="35dp"
+        android:text="Test"
+        app:layout_constraintStart_toEndOf="@+id/restaurant_name"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <TextView
         android:id="@+id/restaurant_hours"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/restaurant_name"
-        android:layout_marginLeft="20dp"
-        android:layout_marginBottom="-35dp"
-        android:text="Test" />
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="10dp"
+        android:text="Test"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/restaurant_name" />
 
     <TextView
         android:id="@+id/restaurant_adress"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="35dp"
+        android:layout_width="265dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="10dp"
         android:layout_toEndOf="@+id/restaurant_hours"
-        android:text="Test" />
-
+        android:text="Test"
+        app:layout_constraintStart_toEndOf="@+id/restaurant_hours"
+        app:layout_constraintTop_toBottomOf="@+id/restaurant_name" />
 
     <ImageView
         android:id="@+id/restaurant_picture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/restaurant_distance" />
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="84dp"
+        app:layout_constraintStart_toEndOf="@+id/restaurant_distance"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
