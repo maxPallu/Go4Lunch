@@ -104,7 +104,6 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
     public void onResponse(@Nullable Restaurants restaurants) {
         if(restaurants != null) {
             this.updateUIWithRestaurants(restaurants);
-            this.updateUIWithDetails(mDetails);
             mRestaurants = restaurants;
         }
     }

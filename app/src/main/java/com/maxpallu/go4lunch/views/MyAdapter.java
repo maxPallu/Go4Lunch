@@ -88,13 +88,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
 
         holder.restaurantHours.setText(R.string.Open);
 
-        if(currentDetail == null) {
-            holder.restaurantAdress.setText("Aucune adresse");
+        holder.restaurantAdress.setText(currentRestaurant.get(position).getVicinity());
+
+        if(currentDetail == null || currentDetail.isEmpty()) {
+            holder.restaurantDistance.setText("Aucun avis");
         } else {
-            holder.restaurantAdress.setText(" -  "+currentDetail.get(0).getFormattedPhoneNumber());
+            holder.restaurantDistance.setText(" -  "+currentDetail.get(0).getRating().toString());
         }
 
-        Glide.with(context.getApplicationContext()).load(currentRestaurant.get(position).getPhotos().get(0)).into(holder.resturantPicture);
+        // Glide.with(context.getApplicationContext()).load(currentDetail.get(0).getIcon()).into(holder.resturantPicture);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
