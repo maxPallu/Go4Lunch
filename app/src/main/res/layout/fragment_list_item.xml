@@ -40,13 +40,14 @@
     <TextView
         android:id="@+id/restaurant_adress"
         android:layout_width="265dp"
-        android:layout_height="39dp"
+        android:layout_height="0dp"
         android:layout_marginStart="35dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="29dp"
         android:layout_toEndOf="@+id/restaurant_hours"
         android:text="Test"
+        app:layout_constraintBottom_toTopOf="@+id/ratings"
         app:layout_constraintStart_toEndOf="@+id/restaurant_hours"
-        app:layout_constraintTop_toBottomOf="@+id/restaurant_name" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/restaurant_picture"
@@ -55,5 +56,17 @@
         android:layout_marginStart="84dp"
         app:layout_constraintStart_toEndOf="@+id/restaurant_distance"
         app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/ratings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="35dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/restaurant_picture"
+        app:layout_constraintHorizontal_bias="0.865"
+        app:layout_constraintStart_toStartOf="@+id/restaurant_adress"
+        app:layout_constraintTop_toBottomOf="@+id/restaurant_adress" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.maxpallu.go4lunch.api.WorkmateHelper;
 import com.maxpallu.go4lunch.di.DI;
 import com.maxpallu.go4lunch.models.Workmate;
 import com.maxpallu.go4lunch.service.WorkmateApiService;
@@ -43,12 +44,17 @@ public class WorkmatesFragment extends Fragment {
         Context context = view.getContext();
         mRecyclerView = (RecyclerView) view;
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+
         return view;
     }
 
     private void initList() {
         mWorkmates = mApiService.getWorkmates();
         mRecyclerView.setAdapter(new WorkmateRecyclerViewAdapter(mWorkmates));
+        for(int i = 0; i<mWorkmates.size(); i++) {
+            WorkmateHelper.createWorkmate(mWorkmates.get(i).getId(), mWorkmates.get(i).getName(),
+                    mWorkmates.get(i).getAvatarUrl());
+        }
     }
 
     @Override

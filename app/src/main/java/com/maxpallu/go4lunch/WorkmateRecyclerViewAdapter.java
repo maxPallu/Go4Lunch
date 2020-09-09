@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.maxpallu.go4lunch.api.WorkmateHelper;
 import com.maxpallu.go4lunch.models.Workmate;
 
 import java.util.List;

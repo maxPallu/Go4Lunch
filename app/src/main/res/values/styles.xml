@@ -18,4 +18,11 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
+    <!-- SEARCH VIEW -->
+    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <item name="searchIcon">@drawable/ic_baseline_search_24</item>
+        <item name="queryBackground">@color/white</item>
+        <item name="searchHintIcon">@null</item>
+    </style>
+
 </resources>

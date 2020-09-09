@@ -42,6 +42,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
         private TextView restaurantHours;
         private TextView restaurantDistance;
         private ImageView resturantPicture;
+        private ImageView restaurantRatings;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -50,6 +51,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
             restaurantHours = itemView.findViewById(R.id.restaurant_hours);
             resturantPicture = itemView.findViewById(R.id.restaurant_picture);
             restaurantDistance = itemView.findViewById(R.id.restaurant_distance);
+            restaurantRatings = itemView.findViewById(R.id.ratings);
         }
     }
 
@@ -94,7 +96,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
         if(currentDetail == null || currentDetail.isEmpty()) {
             holder.restaurantDistance.setText("Aucun avis");
         } else {
-            holder.restaurantDistance.setText(" -  "+currentDetail.get(0).getRating().toString());
+            if(currentDetail.get(0).getRating() <= 2) {
+                holder.restaurantRatings.setImageResource(R.drawable.ic_baseline_star_24);
+            } else {
+                holder.restaurantRatings.setImageResource(R.drawable.three_stars);
+            }
+
             Glide.with(context.getApplicationContext()).load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&maxheight=800&photoreference=" + currentRestaurant.get(position).getPhotos().get(0).getPhotoReference() +"&key=AIzaSyAcRMUsc5zeKZG5sxZz7-dk-CeT7PtudKA")
                     .apply(RequestOptions.centerCropTransform())
                     .into(holder.resturantPicture);
@@ -128,7 +135,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             List<Result> filteredList = new ArrayList<>();
-
+            filteredList = mResults;
             if(constraint == null || constraint.length() == 0) {
                 filteredList.addAll(mResultsFull);
             } else {

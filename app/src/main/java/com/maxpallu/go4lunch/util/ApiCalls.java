@@ -32,19 +32,20 @@ public class ApiCalls {
             public void onResponse(Call<Restaurants> call, Response<Restaurants> response) {
                 if(callbacksWeakReference.get() != null) {
                         callbacksWeakReference.get().onResponse(response.body());
-                        Call<PlaceDetailsResponse> callDetails = restaurantService.getDetails(response.body().getResults().get(0).getPlaceId());
-                        callDetails.enqueue(new Callback<PlaceDetailsResponse>() {
-                            @Override
-                            public void onResponse(Call<PlaceDetailsResponse> call, Response<PlaceDetailsResponse> response) {
-                                callbacksWeakReference.get().onDetailsResponse(response.body());
-                            }
+                        for(int i=0; i<response.body().getResults().size(); i++) {
+                            Call<PlaceDetailsResponse> callDetails = restaurantService.getDetails(response.body().getResults().get(0).getPlaceId());
+                            callDetails.enqueue(new Callback<PlaceDetailsResponse>() {
+                                @Override
+                                public void onResponse(Call<PlaceDetailsResponse> call, Response<PlaceDetailsResponse> response) {
+                                    callbacksWeakReference.get().onDetailsResponse(response.body());
+                                }
 
-                            @Override
-                            public void onFailure(Call<PlaceDetailsResponse> call, Throwable t) {
-                                if(callbacksWeakReference.get() != null) callbacksWeakReference.get().onFailure();
-                            }
-                        });
-
+                                @Override
+                                public void onFailure(Call<PlaceDetailsResponse> call, Throwable t) {
+                                    if(callbacksWeakReference.get() != null) callbacksWeakReference.get().onFailure();
+                                }
+                            });
+                        }
                     }
             }
 
