@@ -2,6 +2,7 @@ package com.maxpallu.go4lunch.views;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.maps.model.LatLng;
 import com.maxpallu.go4lunch.DetailActivity;
+import com.maxpallu.go4lunch.MapFragment;
 import com.maxpallu.go4lunch.R;
 import com.maxpallu.go4lunch.models.DetailsResult;
 import com.maxpallu.go4lunch.models.Restaurants;
@@ -34,6 +37,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
     private List<DetailsResult> mDetails = new ArrayList<>();
     private Restaurants mRestaurants;
     private Context context;
+    private LatLng userLatLng;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -81,6 +85,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
         notifyDataSetChanged();
     }
 
+    public void updateLatLng(double lat, double lng) {
+        userLatLng = new LatLng(lat, lng);
+    }
+
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
@@ -93,19 +101,20 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
 
         holder.restaurantAdress.setText(currentRestaurant.get(position).getVicinity());
 
-        if(currentDetail == null || currentDetail.isEmpty()) {
+        if (currentDetail == null || currentDetail.isEmpty()) {
             holder.restaurantDistance.setText("Aucun avis");
         } else {
-            if(currentDetail.get(0).getRating() <= 2) {
+            if (currentDetail.get(0).getRating() <= 2) {
                 holder.restaurantRatings.setImageResource(R.drawable.ic_baseline_star_24);
             } else {
                 holder.restaurantRatings.setImageResource(R.drawable.three_stars);
             }
 
-            Glide.with(context.getApplicationContext()).load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&maxheight=800&photoreference=" + currentRestaurant.get(position).getPhotos().get(0).getPhotoReference() +"&key=AIzaSyAcRMUsc5zeKZG5sxZz7-dk-CeT7PtudKA")
+            Glide.with(context.getApplicationContext()).load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&maxheight=800&photoreference=" + currentRestaurant.get(position).getPhotos().get(0).getPhotoReference() + "&key=AIzaSyAcRMUsc5zeKZG5sxZz7-dk-CeT7PtudKA")
                     .apply(RequestOptions.centerCropTransform())
                     .into(holder.resturantPicture);
         }
+
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,13 +123,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
 
                 detailsActivity.putExtra("restaurantName", currentRestaurant.get(position).getName());
                 detailsActivity.putExtra("restaurantAdress", currentRestaurant.get(position).getVicinity());
-                detailsActivity.putExtra("restaurantPicture", "https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&maxheight=800&photoreference=" + currentRestaurant.get(position).getPhotos().get(0).getPhotoReference() +"&key=AIzaSyAcRMUsc5zeKZG5sxZz7-dk-CeT7PtudKA");
+                detailsActivity.putExtra("restaurantPicture", "https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&maxheight=800&photoreference=" + currentRestaurant.get(position).getPhotos().get(0).getPhotoReference() + "&key=AIzaSyAcRMUsc5zeKZG5sxZz7-dk-CeT7PtudKA");
+                detailsActivity.putExtra("restaurantPhone", currentDetail.get(position).getFormattedPhoneNumber());
+                detailsActivity.putExtra("restaurantWeb", currentDetail.get(position).getWebsite());
 
                 v.getContext().startActivity(detailsActivity);
             }
         });
     }
-
     @Override
     public int getItemCount() {
         return mResults.size();
@@ -136,13 +146,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
         protected FilterResults performFiltering(CharSequence constraint) {
             List<Result> filteredList = new ArrayList<>();
             filteredList = mResults;
-            if(constraint == null || constraint.length() == 0) {
+            if (constraint == null || constraint.length() == 0) {
                 filteredList.addAll(mResultsFull);
             } else {
                 String filterPattern = constraint.toString().toLowerCase().trim();
 
                 for (Result result : mResultsFull) {
-                    if(result.getName().toLowerCase().contains(filterPattern)) {
+                    if (result.getName().toLowerCase().contains(filterPattern)) {
                         filteredList.add(result);
                     }
                 }
