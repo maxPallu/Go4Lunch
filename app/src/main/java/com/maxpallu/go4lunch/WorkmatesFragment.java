@@ -2,6 +2,7 @@ package com.maxpallu.go4lunch;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +13,18 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.maxpallu.go4lunch.api.WorkmateHelper;
 import com.maxpallu.go4lunch.di.DI;
 import com.maxpallu.go4lunch.models.Workmate;
 import com.maxpallu.go4lunch.service.WorkmateApiService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class WorkmatesFragment extends Fragment {
 
@@ -25,6 +32,7 @@ public class WorkmatesFragment extends Fragment {
     private List<Workmate> mWorkmates;
     private RecyclerView mRecyclerView;
     private WorkmateRecyclerViewAdapter mAdapter = new WorkmateRecyclerViewAdapter(mWorkmates);
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     public static WorkmatesFragment newInstance() {
         WorkmatesFragment fragment = new WorkmatesFragment();
@@ -52,8 +60,24 @@ public class WorkmatesFragment extends Fragment {
         mWorkmates = mApiService.getWorkmates();
         mRecyclerView.setAdapter(new WorkmateRecyclerViewAdapter(mWorkmates));
         for(int i = 0; i<mWorkmates.size(); i++) {
-            WorkmateHelper.createWorkmate(mWorkmates.get(i).getId(), mWorkmates.get(i).getName(),
-                    mWorkmates.get(i).getAvatarUrl());
+            Map<String, String> user = new HashMap<>();
+            user.put("id", mWorkmates.get(i).getId());
+            user.put("name", mWorkmates.get(i).getName());
+            user.put("urlPicture", mWorkmates.get(i).getAvatarUrl());
+
+            db.collection("workmates").add(user)
+                                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                        @Override
+                                                        public void onSuccess(DocumentReference documentReference) {
+                                                            Log.d("success", "DocumentSnapshot added with ID: " + documentReference.getId());
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Log.w("fail", "Error adding document", e);
+                                                        }
+                                                    });
         }
     }
 

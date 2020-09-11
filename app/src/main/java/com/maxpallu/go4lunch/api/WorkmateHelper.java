@@ -2,6 +2,7 @@ package com.maxpallu.go4lunch.api;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.maxpallu.go4lunch.models.Workmate;
@@ -18,9 +19,9 @@ public class WorkmateHelper {
 
     // --- CREATE ---
 
-    public static Task<Void> createWorkmate(String id, String name, String urlPicture) {
+    public static Task<DocumentReference> createWorkmate(String id, String name, String urlPicture) {
         Workmate workmate = new Workmate(id, name, urlPicture);
-        return WorkmateHelper.getWorkmatesCollection().document(id).set(workmate);
+        return WorkmateHelper.getWorkmatesCollection().add(workmate);
     }
 
     // --- GET ---
