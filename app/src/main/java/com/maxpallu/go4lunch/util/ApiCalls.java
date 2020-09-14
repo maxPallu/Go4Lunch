@@ -33,7 +33,7 @@ public class ApiCalls {
                 if(callbacksWeakReference.get() != null) {
                         callbacksWeakReference.get().onResponse(response.body());
                         for(int i=0; i<response.body().getResults().size(); i++) {
-                            Call<PlaceDetailsResponse> callDetails = restaurantService.getDetails(response.body().getResults().get(0).getPlaceId());
+                            Call<PlaceDetailsResponse> callDetails = restaurantService.getDetails(response.body().getResults().get(i).getPlaceId());
                             callDetails.enqueue(new Callback<PlaceDetailsResponse>() {
                                 @Override
                                 public void onResponse(Call<PlaceDetailsResponse> call, Response<PlaceDetailsResponse> response) {

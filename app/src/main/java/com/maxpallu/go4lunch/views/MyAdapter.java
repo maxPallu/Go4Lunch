@@ -24,6 +24,7 @@ import com.maxpallu.go4lunch.R;
 import com.maxpallu.go4lunch.models.DetailsResult;
 import com.maxpallu.go4lunch.models.Restaurants;
 import com.maxpallu.go4lunch.models.Result;
+import com.maxpallu.go4lunch.util.ApiCalls;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -101,10 +102,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
 
         holder.restaurantAdress.setText(currentRestaurant.get(position).getVicinity());
 
-        if (currentDetail == null || currentDetail.isEmpty()) {
-            holder.restaurantDistance.setText("Aucun avis");
-        } else {
-            if (currentDetail.get(0).getRating() <= 2) {
+        if(currentDetail.get(position).getId() == currentRestaurant.get(position).getId()) {
+            if (currentDetail.get(position).getRating() <= 2) {
                 holder.restaurantRatings.setImageResource(R.drawable.ic_baseline_star_24);
             } else {
                 holder.restaurantRatings.setImageResource(R.drawable.three_stars);
@@ -114,6 +113,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
                     .apply(RequestOptions.centerCropTransform())
                     .into(holder.resturantPicture);
         }
+
+       // if (currentDetail == null || currentDetail.size() <= position) {
+       //     holder.restaurantDistance.setText("Aucun avis");
+       // } else {
+       //
+//
+       //    ;
+       // }
 
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -131,6 +138,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
             }
         });
     }
+
     @Override
     public int getItemCount() {
         return mResults.size();

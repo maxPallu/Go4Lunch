@@ -21,6 +21,7 @@ public class DetailActivity extends AppCompatActivity {
     private ImageView returnButton;
     private ImageView detailPicture;
     private FloatingActionButton call;
+    private FloatingActionButton goRestaurant;
     private String restaurantPhone;
     private String restaurantWeb;
 
@@ -34,6 +35,7 @@ public class DetailActivity extends AppCompatActivity {
         returnButton = findViewById(R.id.return_button);
         detailPicture = findViewById(R.id.restaurantDetailPicture);
         call = findViewById(R.id.call);
+        goRestaurant = findViewById(R.id.select);
 
         Intent intent = getIntent();
         String restaurantName = intent.getStringExtra("restaurantName");
@@ -51,6 +53,13 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+        goRestaurant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
     }
