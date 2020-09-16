@@ -102,25 +102,18 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
 
         holder.restaurantAdress.setText(currentRestaurant.get(position).getVicinity());
 
-        if(currentDetail.get(position).getId() == currentRestaurant.get(position).getId()) {
-            if (currentDetail.get(position).getRating() <= 2) {
+        DetailsResult details = getDetailsFromRestaurant(currentRestaurant.get(position));
+
+        if(details != null) {
+            if(details.getRating() != null && details.getRating() <= 2) {
                 holder.restaurantRatings.setImageResource(R.drawable.ic_baseline_star_24);
-            } else {
+            } else if (details.getRating() != null) {
                 holder.restaurantRatings.setImageResource(R.drawable.three_stars);
             }
-
-            Glide.with(context.getApplicationContext()).load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&maxheight=800&photoreference=" + currentRestaurant.get(position).getPhotos().get(0).getPhotoReference() + "&key=AIzaSyAcRMUsc5zeKZG5sxZz7-dk-CeT7PtudKA")
-                    .apply(RequestOptions.centerCropTransform())
-                    .into(holder.resturantPicture);
         }
-
-       // if (currentDetail == null || currentDetail.size() <= position) {
-       //     holder.restaurantDistance.setText("Aucun avis");
-       // } else {
-       //
-//
-       //    ;
-       // }
+        Glide.with(context.getApplicationContext()).load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&maxheight=800&photoreference=" + currentRestaurant.get(position).getPhotos().get(0).getPhotoReference() + "&key=AIzaSyAcRMUsc5zeKZG5sxZz7-dk-CeT7PtudKA")
+                .apply(RequestOptions.centerCropTransform())
+                .into(holder.resturantPicture);
 
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -131,12 +124,20 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
                 detailsActivity.putExtra("restaurantName", currentRestaurant.get(position).getName());
                 detailsActivity.putExtra("restaurantAdress", currentRestaurant.get(position).getVicinity());
                 detailsActivity.putExtra("restaurantPicture", "https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&maxheight=800&photoreference=" + currentRestaurant.get(position).getPhotos().get(0).getPhotoReference() + "&key=AIzaSyAcRMUsc5zeKZG5sxZz7-dk-CeT7PtudKA");
-                detailsActivity.putExtra("restaurantPhone", currentDetail.get(position).getFormattedPhoneNumber());
-                detailsActivity.putExtra("restaurantWeb", currentDetail.get(position).getWebsite());
+                detailsActivity.putExtra("restaurantPhone", details.getFormattedPhoneNumber());
+                detailsActivity.putExtra("restaurantWeb", details.getWebsite());
 
                 v.getContext().startActivity(detailsActivity);
             }
         });
+    }
+
+    private DetailsResult getDetailsFromRestaurant(Result result) {
+        for (DetailsResult details: mDetails) {
+            if (details.getPlaceId().equals(result.getPlaceId()))
+                return details;
+        }
+        return null;
     }
 
     @Override

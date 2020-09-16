@@ -2,31 +2,26 @@ package com.maxpallu.go4lunch;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.annotation.Nullable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
-import com.facebook.login.widget.LoginButton;
+
 import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.SignInButton;
+import com.google.firebase.auth.FirebaseUser;
 import com.maxpallu.go4lunch.base.BaseActivity;
 
 import java.util.Collections;
 
-import butterknife.BindView;
 import butterknife.OnClick;
 
 
 public class LoginActivity extends BaseActivity {
 
-    private int RC_SIGN_IN = 1;
-
+    private int RC_SIGN_IN = 9001;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(this.isCurrentUserLogged()) {
+        if (this.isCurrentUserLogged()) {
             this.startMainActivity();
         }
     }
@@ -38,12 +33,17 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.login_button)
     public void onClickFacebookLogin() {
-            this.startFacebookLogin();
+        this.startFacebookLogin();
     }
 
     @OnClick(R.id.signInButton)
     public void onClickGoogleSignIn() {
-            this.startGoogleSign();
+        this.startGoogleSign();
+    }
+
+    @OnClick(R.id.twitterLogin)
+    public void onClickTwitterLogin() {
+        this.startTwitterLogin();
     }
 
     private void startFacebookLogin() {
@@ -54,6 +54,13 @@ public class LoginActivity extends BaseActivity {
                         .setIsSmartLockEnabled(false, true)
                         .build(),
                 RC_SIGN_IN);
+    }
+
+    private void updateUI(FirebaseUser user) {
+
+    }
+
+    private void startTwitterLogin() {
     }
 
     private void startGoogleSign() {
