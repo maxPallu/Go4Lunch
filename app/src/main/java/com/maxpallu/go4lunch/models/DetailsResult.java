@@ -58,6 +58,9 @@ public class DetailsResult {
     @SerializedName("vicinity")
     @Expose
     private String vicinity;
+    @SerializedName("opening_hours")
+    @Expose
+    private OpeningHours openingHours;
     @SerializedName("website")
     @Expose
     private String website;
@@ -215,6 +218,14 @@ public class DetailsResult {
 
     public void setWebsite(String website) {
         this.website = website;
+    }
+
+    public OpeningHours getOpeningHours() {
+        return openingHours;
+    }
+
+    public void setOpeningHours(OpeningHours openingHours) {
+        this.openingHours = openingHours;
     }
 
 }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.maxpallu.go4lunch.util.PermissionUtils;
+import com.maxpallu.go4lunch.views.MyAdapter;
 
 
 public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener, OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
@@ -71,6 +73,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
     public void onMyLocationClick(@NonNull Location location) {
         Toast.makeText(this.getContext(), "Current location:\n" + location, Toast.LENGTH_LONG).show();
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
         mMap.moveCamera(cameraUpdate);
     }
@@ -109,6 +112,9 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
             public boolean onMyLocationButtonClick() {
                 LatLng latLng = new LatLng(mMap.getMyLocation().getLatitude(), mMap.getMyLocation().getLongitude());
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
+                Intent intent = new Intent(getActivity(), MyAdapter.class);
+                intent.putExtra("Latitude", mMap.getMyLocation().getLatitude());
+                intent.putExtra("Longitude", mMap.getMyLocation().getLongitude());
                 mMap.moveCamera(cameraUpdate);
                 return false;
             }

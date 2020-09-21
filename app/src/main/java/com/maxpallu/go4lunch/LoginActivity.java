@@ -17,7 +17,11 @@ import butterknife.OnClick;
 
 public class LoginActivity extends BaseActivity {
 
-    private int RC_SIGN_IN = 9001;
+    private int RC_SIGN_IN_GOOGLE = 123;
+    private int RC_SIGN_IN_FACEBOOK = 456;
+    private int RC_SIGN_IN_EMAIL = 789;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +50,11 @@ public class LoginActivity extends BaseActivity {
         this.startTwitterLogin();
     }
 
+    @OnClick(R.id.emailSignIn)
+    public void onClickEmailLogin() {
+        this.startEmailLogin();
+    }
+
     private void startFacebookLogin() {
         startActivityForResult(
                 AuthUI.getInstance()
@@ -53,14 +62,21 @@ public class LoginActivity extends BaseActivity {
                         .setAvailableProviders(Collections.singletonList(new AuthUI.IdpConfig.FacebookBuilder().build()))
                         .setIsSmartLockEnabled(false, true)
                         .build(),
-                RC_SIGN_IN);
+                RC_SIGN_IN_FACEBOOK);
     }
 
-    private void updateUI(FirebaseUser user) {
-
+    private void startEmailLogin() {
+        startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                .setAvailableProviders(Collections.singletonList(new AuthUI.IdpConfig.EmailBuilder().build()))
+                .setIsSmartLockEnabled(false, true)
+                .build(),
+                RC_SIGN_IN_EMAIL);
     }
 
     private void startTwitterLogin() {
+
     }
 
     private void startGoogleSign() {
@@ -70,7 +86,7 @@ public class LoginActivity extends BaseActivity {
                         .setAvailableProviders(Collections.singletonList(new AuthUI.IdpConfig.GoogleBuilder().build()))
                         .setIsSmartLockEnabled(false, true)
                         .build(),
-                RC_SIGN_IN);
+                RC_SIGN_IN_GOOGLE);
     }
 
     private void startMainActivity() {

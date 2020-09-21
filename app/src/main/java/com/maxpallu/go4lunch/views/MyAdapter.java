@@ -1,5 +1,6 @@
 package com.maxpallu.go4lunch.views;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
@@ -94,22 +95,48 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         List<Result> currentRestaurant = mResults;
-        List<DetailsResult> currentDetail = mDetails;
+        DetailsResult details = getDetailsFromRestaurant(currentRestaurant.get(position));
+        Intent intent = ((Activity) context).getIntent();
 
         holder.restaurantName.setText(currentRestaurant.get(position).getName());
 
-        holder.restaurantHours.setText(R.string.Open);
-
         holder.restaurantAdress.setText(currentRestaurant.get(position).getVicinity());
 
-        DetailsResult details = getDetailsFromRestaurant(currentRestaurant.get(position));
+        double Latitude = intent.getDoubleExtra("Latitude", 0);
+        double Longitude = intent.getDoubleExtra("Longitude", 0);
+
+        Location userLocation = new Location("User Location");
+        userLocation.setLatitude(Latitude);
+        userLocation.setLongitude(Longitude);
+
+        Location restaurantLocation = new Location("Restaurant Location");
+        restaurantLocation.setLatitude(currentRestaurant.get(position).getGeometry().getLocation().getLat());
+        restaurantLocation.setLongitude(currentRestaurant.get(position).getGeometry().getLocation().getLng());
+
+
+        float distance = userLocation.distanceTo(restaurantLocation);
+        String dst = String.valueOf(distance);
+
+        holder.restaurantDistance.setText(dst);
 
         if(details != null) {
+
+            if(details.getOpeningHours() != null) {
+                if (details.getOpeningHours().getOpenNow().equals(true)) {
+                    holder.restaurantHours.setText(R.string.Open);
+                } else {
+                    holder.restaurantHours.setText(R.string.Close);
+                }
+            } else {
+                holder.restaurantHours.setText("Aucune info");
+            }
+
             if(details.getRating() != null && details.getRating() <= 2) {
                 holder.restaurantRatings.setImageResource(R.drawable.ic_baseline_star_24);
             } else if (details.getRating() != null) {
                 holder.restaurantRatings.setImageResource(R.drawable.three_stars);
             }
+
         }
         Glide.with(context.getApplicationContext()).load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&maxheight=800&photoreference=" + currentRestaurant.get(position).getPhotos().get(0).getPhotoReference() + "&key=AIzaSyAcRMUsc5zeKZG5sxZz7-dk-CeT7PtudKA")
                 .apply(RequestOptions.centerCropTransform())

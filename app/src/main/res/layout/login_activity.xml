@@ -90,10 +90,22 @@
         android:id="@+id/twitterLogin"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        app:layout_constraintHorizontal_bias="0.5"
         android:layout_marginTop="15dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginStart="50dp"
+        app:layout_constraintStart_toStartOf="@+id/background"
         app:layout_constraintTop_toBottomOf="@+id/signInButton" />
+
+    <Button
+        android:id="@+id/emailSignIn"
+        style="@style/FirebaseUI.Button.AccountChooser.EmailButton"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="15dp"
+        android:background="#A60D0D"
+        android:text="Log in with email"
+        android:textAlignment="center"
+        app:layout_constraintStart_toStartOf="@+id/background"
+        app:layout_constraintTop_toBottomOf="@+id/twitterLogin" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
