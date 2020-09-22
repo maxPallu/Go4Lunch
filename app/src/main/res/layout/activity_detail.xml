@@ -32,20 +32,20 @@
                     app:contentScrim="?attr/colorPrimary"
                     app:layout_scrollFlags="scroll">
 
-                <ImageView
-                    android:id="@+id/restaurantDetailPicture"
-                    android:layout_width="match_parent"
-                    android:layout_height="270dp"
-                    android:scaleType="centerCrop" />
+                    <ImageView
+                        android:id="@+id/restaurantDetailPicture"
+                        android:layout_width="match_parent"
+                        android:layout_height="270dp"
+                        android:scaleType="centerCrop" />
 
-                <ImageButton
-                    android:id="@+id/return_button"
-                    android:layout_width="39dp"
-                    android:layout_height="39dp"
-                    android:background="@android:drawable/screen_background_light_transparent"
-                    android:backgroundTint="@android:color/transparent"
-                    android:tint="@android:color/white"
-                    app:srcCompat="?attr/actionModeCloseDrawable" />
+                    <ImageButton
+                        android:id="@+id/return_button"
+                        android:layout_width="39dp"
+                        android:layout_height="39dp"
+                        android:background="@android:drawable/screen_background_light_transparent"
+                        android:backgroundTint="@android:color/transparent"
+                        android:tint="@android:color/white"
+                        app:srcCompat="?attr/actionModeCloseDrawable" />
 
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
                         android:id="@+id/select"
@@ -90,10 +90,10 @@
                     android:id="@+id/restaurant_card_adress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="12 Rue du Faubourg Poissonière"
-                    android:textColor="@android:color/white"
+                    android:layout_marginLeft="75dp"
                     android:layout_marginTop="50dp"
-                    android:layout_marginLeft="75dp"/>
+                    android:text="12 Rue du Faubourg Poissonière"
+                    android:textColor="@android:color/white" />
 
             </androidx.cardview.widget.CardView>
 
@@ -104,57 +104,69 @@
                 android:layout_marginLeft="45dp"
                 android:layout_marginTop="15dp"
                 android:backgroundTint="@android:color/white"
+                android:onClick="onCallButton"
                 android:src="@drawable/ic_baseline_call_24"
-                android:tint="@color/colorPrimary"
-                android:onClick="onCallButton" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="CALL"
-                android:textColor="@color/colorPrimary"
-                android:textSize="20dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginLeft="50dp" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/like"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_baseline_star_24"
-                android:layout_marginTop="-90dp"
-                android:layout_marginLeft="175dp"
-                android:backgroundTint="@android:color/white"
                 android:tint="@color/colorPrimary" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="8dp"
+                android:text="CALL"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20dp" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/like"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="175dp"
+                android:layout_marginTop="-90dp"
+                android:backgroundTint="@android:color/white"
+                android:src="@drawable/ic_baseline_star_24"
+                android:tint="@color/colorPrimary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="183dp"
+                android:layout_marginTop="8dp"
                 android:text="LIKE"
                 android:textColor="@color/colorPrimary"
-                android:textSize="20dp"
-                android:layout_marginLeft="183dp"
-                android:layout_marginTop="8dp"/>
+                android:textSize="20dp" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/website"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="-93dp"
                 android:layout_marginLeft="295dp"
-                android:src="@drawable/ic_baseline_public_24"
+                android:layout_marginTop="-93dp"
                 android:backgroundTint="@android:color/white"
-                android:tint="@color/colorPrimary"
-                android:onClick="goToUrl"/>
+                android:onClick="goToUrl"
+                android:src="@drawable/ic_baseline_public_24"
+                android:tint="@color/colorPrimary" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="284dp"
+                android:layout_marginTop="10dp"
                 android:text="WEBSITE"
                 android:textColor="@color/colorPrimary"
-                android:textSize="20dp"
-                android:layout_marginLeft="284dp"
-                android:layout_marginTop="10dp"/>
+                android:textSize="20dp" />
+
+            <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/list_client"
+                android:name="com.maxpallu.go4lunch.WorkmatesFragment"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="16dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         </LinearLayout>
 

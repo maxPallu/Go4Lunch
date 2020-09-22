@@ -8,9 +8,12 @@ import androidx.annotation.Nullable;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.maxpallu.go4lunch.base.BaseActivity;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.OnClick;
 
@@ -20,6 +23,7 @@ public class LoginActivity extends BaseActivity {
     private int RC_SIGN_IN_GOOGLE = 123;
     private int RC_SIGN_IN_FACEBOOK = 456;
     private int RC_SIGN_IN_EMAIL = 789;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
     @Override
@@ -63,6 +67,11 @@ public class LoginActivity extends BaseActivity {
                         .setIsSmartLockEnabled(false, true)
                         .build(),
                 RC_SIGN_IN_FACEBOOK);
+        Map<String, String> user = new HashMap<>();
+        user.put("id", this.getCurrentUser().getUid());
+        user.put("name", this.getCurrentUser().getDisplayName());
+        user.put("urlPicture", this.getCurrentUser().getPhotoUrl().toString());
+        db.collection("user").add(user);
     }
 
     private void startEmailLogin() {
@@ -73,6 +82,11 @@ public class LoginActivity extends BaseActivity {
                 .setIsSmartLockEnabled(false, true)
                 .build(),
                 RC_SIGN_IN_EMAIL);
+        Map<String, String> user = new HashMap<>();
+        user.put("id", this.getCurrentUser().getUid());
+        user.put("name", this.getCurrentUser().getDisplayName());
+        user.put("urlPicture", this.getCurrentUser().getPhotoUrl().toString());
+        db.collection("user").add(user);
     }
 
     private void startTwitterLogin() {
@@ -87,9 +101,19 @@ public class LoginActivity extends BaseActivity {
                         .setIsSmartLockEnabled(false, true)
                         .build(),
                 RC_SIGN_IN_GOOGLE);
+        Map<String, String> user = new HashMap<>();
+        user.put("id", this.getCurrentUser().getUid());
+        user.put("name", this.getCurrentUser().getDisplayName());
+        user.put("urlPicture", this.getCurrentUser().getPhotoUrl().toString());
+        db.collection("user").add(user);
     }
 
     private void startMainActivity() {
+        Map<String, String> user = new HashMap<>();
+        user.put("id", this.getCurrentUser().getUid());
+        user.put("name", this.getCurrentUser().getDisplayName());
+        user.put("urlPicture", this.getCurrentUser().getPhotoUrl().toString());
+        db.collection("user").add(user);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
