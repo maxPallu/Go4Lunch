@@ -112,9 +112,6 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
             public boolean onMyLocationButtonClick() {
                 LatLng latLng = new LatLng(mMap.getMyLocation().getLatitude(), mMap.getMyLocation().getLongitude());
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
-                Intent intent = new Intent(getActivity(), MyAdapter.class);
-                intent.putExtra("Latitude", mMap.getMyLocation().getLatitude());
-                intent.putExtra("Longitude", mMap.getMyLocation().getLongitude());
                 mMap.moveCamera(cameraUpdate);
                 return false;
             }

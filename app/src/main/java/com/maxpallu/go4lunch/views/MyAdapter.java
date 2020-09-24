@@ -102,22 +102,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
 
         holder.restaurantAdress.setText(currentRestaurant.get(position).getVicinity());
 
-        double Latitude = intent.getDoubleExtra("Latitude", 0);
-        double Longitude = intent.getDoubleExtra("Longitude", 0);
 
-        Location userLocation = new Location("User Location");
-        userLocation.setLatitude(Latitude);
-        userLocation.setLongitude(Longitude);
-
-        Location restaurantLocation = new Location("Restaurant Location");
-        restaurantLocation.setLatitude(currentRestaurant.get(position).getGeometry().getLocation().getLat());
-        restaurantLocation.setLongitude(currentRestaurant.get(position).getGeometry().getLocation().getLng());
-
-
-        float distance = userLocation.distanceTo(restaurantLocation);
-        String dst = String.valueOf(distance);
-
-        holder.restaurantDistance.setText(dst);
+        double userLatitude = userLatLng.latitude;
+        double userLongitude = userLatLng.longitude;
+        double Latitude = currentRestaurant.get(position).getGeometry().getLocation().getLat();
+        double Longitude = currentRestaurant.get(position).getGeometry().getLocation().getLng();
+        float dst;
+        float results[] = new float[10];
+        Location.distanceBetween(userLatitude, userLongitude, Latitude, Longitude, results);
+        dst = results[0];
+        String distance = Math.round(dst)+"m";
+        holder.restaurantDistance.setText(distance);
 
         if(details != null) {
 
