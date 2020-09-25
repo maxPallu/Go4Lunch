@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.maxpallu.go4lunch.DetailActivity;
+import com.maxpallu.go4lunch.ListFragment;
 import com.maxpallu.go4lunch.MapFragment;
 import com.maxpallu.go4lunch.R;
 import com.maxpallu.go4lunch.models.DetailsResult;
@@ -89,6 +90,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
 
     public void updateLatLng(double lat, double lng) {
         userLatLng = new LatLng(lat, lng);
+        notifyDataSetChanged();
     }
 
 
@@ -102,17 +104,20 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
 
         holder.restaurantAdress.setText(currentRestaurant.get(position).getVicinity());
 
-
-        double userLatitude = userLatLng.latitude;
-        double userLongitude = userLatLng.longitude;
-        double Latitude = currentRestaurant.get(position).getGeometry().getLocation().getLat();
-        double Longitude = currentRestaurant.get(position).getGeometry().getLocation().getLng();
-        float dst;
-        float results[] = new float[10];
-        Location.distanceBetween(userLatitude, userLongitude, Latitude, Longitude, results);
-        dst = results[0];
-        String distance = Math.round(dst)+"m";
-        holder.restaurantDistance.setText(distance);
+        if(userLatLng != null) {
+            double userLatitude = userLatLng.latitude;
+            double userLongitude = userLatLng.longitude;
+            double restaurantLatitude = currentRestaurant.get(position).getGeometry().getLocation().getLat();
+            double restaurantLongitude = currentRestaurant.get(position).getGeometry().getLocation().getLng();
+            float dst;
+            float results[] = new float[10];
+            Location.distanceBetween(userLatitude, userLongitude, restaurantLatitude, restaurantLongitude, results);
+            dst = results[0];
+            String distance = Math.round(dst)+"m";
+            holder.restaurantDistance.setText(distance);
+        } else {
+            holder.restaurantDistance.setText("Pas de distance");
+        }
 
         if(details != null) {
 
@@ -161,6 +166,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
         }
         return null;
     }
+
+
 
     @Override
     public int getItemCount() {
