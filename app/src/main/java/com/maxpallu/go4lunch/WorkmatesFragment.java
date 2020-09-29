@@ -60,24 +60,9 @@ public class WorkmatesFragment extends Fragment {
         mWorkmates = mApiService.getWorkmates();
         mRecyclerView.setAdapter(new WorkmateRecyclerViewAdapter(mWorkmates));
         for(int i = 0; i<mWorkmates.size(); i++) {
-            Map<String, String> user = new HashMap<>();
-            user.put("id", mWorkmates.get(i).getId());
-            user.put("name", mWorkmates.get(i).getName());
-            user.put("urlPicture", mWorkmates.get(i).getAvatarUrl());
-
-            db.collection("workmates").add(user)
-                                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                                        @Override
-                                                        public void onSuccess(DocumentReference documentReference) {
-                                                            Log.d("success", "DocumentSnapshot added with ID: " + documentReference.getId());
-                                                        }
-                                                    })
-                                                    .addOnFailureListener(new OnFailureListener() {
-                                                        @Override
-                                                        public void onFailure(@NonNull Exception e) {
-                                                            Log.w("fail", "Error adding document", e);
-                                                        }
-                                                    });
+            Workmate workmate = new Workmate(mWorkmates.get(i).getId(), mWorkmates.get(i).getName(), mWorkmates.get(i).getAvatarUrl(), mWorkmates.get(i).getRestaurantId());
+            db.collection("workmates").document(FirebaseFirestore.getInstance().collection("workmates")
+                    .document().getId()).set(workmate);
         }
     }
 

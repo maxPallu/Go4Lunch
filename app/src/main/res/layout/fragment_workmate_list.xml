@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     android:id="@+id/list_workmates"
     android:name="com.maxpallu.go4lunch.WorkmatesFragment"
-    android:layout_marginLeft="18dp"
-    android:layout_marginRight="16dp"
     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
     tools:context=".WorkmatesFragment"
     tools:listitem="@layout/fragment_workmates" />

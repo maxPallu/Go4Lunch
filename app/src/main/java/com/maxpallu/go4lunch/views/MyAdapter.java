@@ -149,6 +149,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
                 Intent detailsActivity = new Intent(v.getContext(), DetailActivity.class);
 
                 detailsActivity.putExtra("restaurantName", currentRestaurant.get(position).getName());
+                detailsActivity.putExtra("restaurantId", currentRestaurant.get(position).getId());
                 detailsActivity.putExtra("restaurantAdress", currentRestaurant.get(position).getVicinity());
                 detailsActivity.putExtra("restaurantPicture", "https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&maxheight=800&photoreference=" + currentRestaurant.get(position).getPhotos().get(0).getPhotoReference() + "&key=AIzaSyAcRMUsc5zeKZG5sxZz7-dk-CeT7PtudKA");
                 detailsActivity.putExtra("restaurantPhone", details.getFormattedPhoneNumber());

@@ -1,22 +1,26 @@
 package com.maxpallu.go4lunch.api;
 
+import android.net.Uri;
+
 public class User {
 
     private String id;
     private String name;
     private String email;
     private String restaurant;
+    private String restaurantId;
     private String restaurantName;
-    private String urlPicture;
+    private Uri urlPicture;
 
     public User() {}
 
-    public User(String id, String name, String mail, String picture) {
+    public User(String id, String name, String mail, Uri picture, String restaurantName, String restaurantId) {
         this.id = id;
         this.email = mail;
         this.name = name;
+        this.restaurantId = restaurantId;
         this.restaurant = "";
-        this.restaurantName = "";
+        this.restaurantName = restaurantName;
         this.urlPicture = picture;
     }
 
@@ -43,8 +47,12 @@ public class User {
         return restaurantName;
     }
 
-    public String getUrlPicture() {
+    public Uri getUrlPicture() {
         return urlPicture;
+    }
+
+    public String getRestaurantId() {
+        return restaurantId;
     }
 
     // SETTERS
@@ -70,7 +78,11 @@ public class User {
         this.restaurantName = restaurantName;
     }
 
-    public void setUrlPicture(String urlPicture) {
+    public void setUrlPicture(Uri urlPicture) {
         this.urlPicture = urlPicture;
+    }
+
+    public void setRestaurantId(String restaurantId) {
+        this.restaurantId = restaurantId;
     }
 }

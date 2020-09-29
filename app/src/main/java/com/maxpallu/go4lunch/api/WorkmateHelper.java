@@ -19,8 +19,8 @@ public class WorkmateHelper {
 
     // --- CREATE ---
 
-    public static Task<DocumentReference> createWorkmate(String id, String name, String urlPicture) {
-        Workmate workmate = new Workmate(id, name, urlPicture);
+    public static Task<DocumentReference> createWorkmate(String id, String name, String urlPicture, String restaurantId) {
+        Workmate workmate = new Workmate(id, name, urlPicture, restaurantId);
         return WorkmateHelper.getWorkmatesCollection().add(workmate);
     }
 
