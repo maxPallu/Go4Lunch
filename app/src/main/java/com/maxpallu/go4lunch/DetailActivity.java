@@ -17,6 +17,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.maxpallu.go4lunch.api.User;
 import com.maxpallu.go4lunch.api.UserHelper;
+import com.maxpallu.go4lunch.api.WorkmateHelper;
 import com.maxpallu.go4lunch.base.BaseActivity;
 import com.maxpallu.go4lunch.di.DI;
 import com.maxpallu.go4lunch.models.Result;
@@ -35,13 +36,16 @@ public class DetailActivity extends AppCompatActivity {
     private ImageView detailPicture;
     private FloatingActionButton call;
     private FloatingActionButton goRestaurant;
+    private FloatingActionButton like;
     private String restaurantPhone;
     private String restaurantWeb;
+    private String restaurantId;
     private WorkmateApiService mApiService;
     private List<Workmate> mWorkmates;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private WorkmateRecyclerViewAdapter mAdapter = new WorkmateRecyclerViewAdapter(mWorkmates);
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +57,7 @@ public class DetailActivity extends AppCompatActivity {
         returnButton = findViewById(R.id.return_button);
         detailPicture = findViewById(R.id.restaurantDetailPicture);
         call = findViewById(R.id.call);
+        like = findViewById(R.id.like);
         goRestaurant = findViewById(R.id.select);
 
         mApiService = DI.getService();
@@ -64,11 +69,13 @@ public class DetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String restaurantName = intent.getStringExtra("restaurantName");
-        String restaurantId = intent.getStringExtra("restaurantId");
+        restaurantId = intent.getStringExtra("restaurantId");
         String restaurantAdress = intent.getStringExtra("restaurantAdress");
         String restaurantPicture = intent.getStringExtra("restaurantPicture");
         restaurantPhone = intent.getStringExtra("restaurantPhone");
         restaurantWeb = intent.getStringExtra("restaurantWeb");
+
+        WorkmateHelper.updateRestaurant(WorkmateHelper.getWorkmatesCollection().getId(), restaurantName, restaurantId);
 
         detailName.setText(restaurantName);
         detailAdress.setText(restaurantAdress);
@@ -85,7 +92,17 @@ public class DetailActivity extends AppCompatActivity {
         goRestaurant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UserHelper.updateRestaurant(FirebaseFirestore.getInstance().collection("user").document().getId() ,restaurantName, restaurantId);
+                userId = UserHelper.getUserId();
+                FirebaseFirestore.getInstance().collection("user").document(userId).update("restaurantName", restaurantName);
+                FirebaseFirestore.getInstance().collection("user").document(userId).update("restaurantId", restaurantId);
+                goRestaurant.setBackgroundTintList(getResources().getColorStateList(R.color.restaurant));
+            }
+        });
+
+        like.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                like.setBackgroundTintList(getResources().getColorStateList(R.color.like));
             }
         });
     }
@@ -105,7 +122,14 @@ public class DetailActivity extends AppCompatActivity {
 
     private void initClientList() {
         mWorkmates = mApiService.getWorkmates();
-        recyclerView.setAdapter(new WorkmateRecyclerViewAdapter(mWorkmates));
+        for(int i =0; i<mWorkmates.size(); i++) {
+            if(mWorkmates.get(i).getRestaurantId() == restaurantId) {
+                recyclerView.setAdapter(new WorkmateRecyclerViewAdapter(mWorkmates));
+            }
+        }
+
+      // mWorkmates = mApiService.getWorkmates();
+      // recyclerView.setAdapter(new WorkmateRecyclerViewAdapter(mWorkmates));
     }
 
     @Override

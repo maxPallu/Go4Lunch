@@ -12,17 +12,16 @@ public class RestaurantHelper {
     private static final String COLLECTION_NAME = "restaurants";
 
     public static CollectionReference getRestaurantCollection() {
-
         return FirebaseFirestore.getInstance().collection(COLLECTION_NAME);
     }
 
-    public static Task<Void> createRestaurant(String id, String name, String adress) {
-        Restaurant restaurantToCreate = new Restaurant(name, adress);
+    public static Task<Void> createRestaurant(String id, String name, String restaurantId) {
+        Restaurant restaurantToCreate = new Restaurant(name, restaurantId);
         return RestaurantHelper.getRestaurantCollection().document(id).set(restaurantToCreate);
     }
 
-    public static Task<Void> updateName(String name, String id) {
-        return RestaurantHelper.getRestaurantCollection().document(id).update("name", name);
+    public static Task<Void> updateName(String name, String restaurantId, String id) {
+        return RestaurantHelper.getRestaurantCollection().document(id).update("name", name, "restaurantId", restaurantId);
     }
 
     public static Task<DocumentSnapshot> getRestaurant(String id) {

@@ -19,8 +19,8 @@ public class WorkmateHelper {
 
     // --- CREATE ---
 
-    public static Task<DocumentReference> createWorkmate(String id, String name, String urlPicture, String restaurantId) {
-        Workmate workmate = new Workmate(id, name, urlPicture, restaurantId);
+    public static Task<DocumentReference> createWorkmate(String id, String name, String urlPicture, String restaurantId, String restaurantName) {
+        Workmate workmate = new Workmate(id, name, urlPicture, restaurantId, restaurantName);
         return WorkmateHelper.getWorkmatesCollection().add(workmate);
     }
 
@@ -34,6 +34,10 @@ public class WorkmateHelper {
 
     public static Task<Void> updateName(String name, String id) {
         return WorkmateHelper.getWorkmatesCollection().document(id).update("name", name);
+    }
+
+    public static Task<Void> updateRestaurant(String id, String restaurantName, String restaurantId) {
+        return WorkmateHelper.getWorkmatesCollection().document(id).update("restaurantName", restaurantName, "restaurantId", restaurantId);
     }
 
     // --- DELETE ---

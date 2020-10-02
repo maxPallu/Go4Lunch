@@ -5,15 +5,16 @@ import java.util.List;
 
 public class Restaurant {
 
+    private String id;
     private String name;
     private String adress;
     private List<String> clients;
 
     public Restaurant() {}
 
-    public Restaurant(String name, String adress) {
+    public Restaurant(String name, String id) {
         this.name = name;
-        this.adress = adress;
+        this.id = id;
         this.clients = new ArrayList<>();
     }
 
@@ -39,5 +40,13 @@ public class Restaurant {
 
     public void setClients(List<String> clients) {
         this.clients = clients;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

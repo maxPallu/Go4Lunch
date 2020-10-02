@@ -3,9 +3,12 @@ package com.maxpallu.go4lunch.api;
 import android.net.Uri;
 
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Objects;
 
 public class UserHelper {
 
@@ -22,6 +25,10 @@ public class UserHelper {
 
     public static Task<DocumentSnapshot> getUser(String id) {
         return UserHelper.getUsersCollection().document(id).get();
+    }
+
+    public static String getUserId() {
+        return Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
     }
 
     public static Task<Void> updateUser(String id, String name, String mail, String urlPicture) {

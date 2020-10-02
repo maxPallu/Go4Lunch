@@ -103,8 +103,9 @@ public class LoginActivity extends BaseActivity {
         user.put("id", this.getCurrentUser().getUid());
         user.put("name", this.getCurrentUser().getDisplayName());
         user.put("urlPicture", this.getCurrentUser().getPhotoUrl().toString());
-        user.put("restaurantName", "");
-        user.put("restaurantId", "");
+        user.put("mail", this.getCurrentUser().getEmail());
+        user.put("restaurantName", null);
+        user.put("restaurantId", null);
         db.collection("user").document(getCurrentUser().getUid()).set(user);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

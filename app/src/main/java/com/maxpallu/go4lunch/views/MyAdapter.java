@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,10 @@ import com.maxpallu.go4lunch.DetailActivity;
 import com.maxpallu.go4lunch.ListFragment;
 import com.maxpallu.go4lunch.MapFragment;
 import com.maxpallu.go4lunch.R;
+import com.maxpallu.go4lunch.WorkmateRecyclerViewAdapter;
+import com.maxpallu.go4lunch.WorkmatesFragment;
+import com.maxpallu.go4lunch.api.Restaurant;
+import com.maxpallu.go4lunch.api.RestaurantHelper;
 import com.maxpallu.go4lunch.models.DetailsResult;
 import com.maxpallu.go4lunch.models.Restaurants;
 import com.maxpallu.go4lunch.models.Result;
@@ -74,6 +79,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_list_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(v);
         context = parent.getContext();
+
         return viewHolder;
     }
 
@@ -99,6 +105,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
         List<Result> currentRestaurant = mResults;
         DetailsResult details = getDetailsFromRestaurant(currentRestaurant.get(position));
         Intent intent = ((Activity) context).getIntent();
+
+        RestaurantHelper.createRestaurant(currentRestaurant.get(position).getPlaceId(), currentRestaurant.get(position).getName(), currentRestaurant.get(position).getId());
 
         holder.restaurantName.setText(currentRestaurant.get(position).getName());
 
@@ -149,7 +157,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
                 Intent detailsActivity = new Intent(v.getContext(), DetailActivity.class);
 
                 detailsActivity.putExtra("restaurantName", currentRestaurant.get(position).getName());
-                detailsActivity.putExtra("restaurantId", currentRestaurant.get(position).getId());
+
+                detailsActivity.putExtra("restaurantId", currentRestaurant.get(position).getPlaceId());
                 detailsActivity.putExtra("restaurantAdress", currentRestaurant.get(position).getVicinity());
                 detailsActivity.putExtra("restaurantPicture", "https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&maxheight=800&photoreference=" + currentRestaurant.get(position).getPhotos().get(0).getPhotoReference() + "&key=AIzaSyAcRMUsc5zeKZG5sxZz7-dk-CeT7PtudKA");
                 detailsActivity.putExtra("restaurantPhone", details.getFormattedPhoneNumber());

@@ -60,7 +60,7 @@ public class WorkmatesFragment extends Fragment {
         mWorkmates = mApiService.getWorkmates();
         mRecyclerView.setAdapter(new WorkmateRecyclerViewAdapter(mWorkmates));
         for(int i = 0; i<mWorkmates.size(); i++) {
-            Workmate workmate = new Workmate(mWorkmates.get(i).getId(), mWorkmates.get(i).getName(), mWorkmates.get(i).getAvatarUrl(), mWorkmates.get(i).getRestaurantId());
+            Workmate workmate = new Workmate(mWorkmates.get(i).getId(), mWorkmates.get(i).getName(), mWorkmates.get(i).getAvatarUrl(), mWorkmates.get(i).getRestaurantId(), mWorkmates.get(i).getRestaurantName());
             db.collection("workmates").document(FirebaseFirestore.getInstance().collection("workmates")
                     .document().getId()).set(workmate);
         }
