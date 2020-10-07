@@ -8,14 +8,14 @@ public class Restaurant {
     private String id;
     private String name;
     private String adress;
-    private List<String> clients;
-
+    private String picture;
     public Restaurant() {}
 
-    public Restaurant(String name, String id) {
+    public Restaurant(String name, String id, String adress, String picture) {
         this.name = name;
         this.id = id;
-        this.clients = new ArrayList<>();
+        this.adress = adress;
+        this.picture = picture;
     }
 
     public String getName() {
@@ -34,19 +34,19 @@ public class Restaurant {
         this.adress = adress;
     }
 
-    public List<String> getClients() {
-        return clients;
-    }
-
-    public void setClients(List<String> clients) {
-        this.clients = clients;
-    }
-
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 }

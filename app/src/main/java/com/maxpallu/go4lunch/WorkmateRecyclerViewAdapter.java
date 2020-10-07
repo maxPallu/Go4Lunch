@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -21,7 +20,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.maxpallu.go4lunch.api.UserHelper;
-import com.maxpallu.go4lunch.api.WorkmateHelper;
 import com.maxpallu.go4lunch.models.Workmate;
 
 import java.util.List;
@@ -32,8 +30,9 @@ import butterknife.ButterKnife;
 public class WorkmateRecyclerViewAdapter extends RecyclerView.Adapter<WorkmateRecyclerViewAdapter.ViewHolder> {
 
     private final List<Workmate> mWorkmates;
-    private Context context;
-    private String restaurantName;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private String adress;
+    private String picture;
 
     public WorkmateRecyclerViewAdapter(List<Workmate> items) {mWorkmates = items;}
 
@@ -41,6 +40,7 @@ public class WorkmateRecyclerViewAdapter extends RecyclerView.Adapter<WorkmateRe
     @Override
     public WorkmateRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_workmates, parent, false);
+
         return new ViewHolder(view);
     }
 
@@ -50,20 +50,24 @@ public class WorkmateRecyclerViewAdapter extends RecyclerView.Adapter<WorkmateRe
         holder.mWorkmateName.setText(workmate.getName());
 
         if(workmate.getRestaurantId() != null) {
-            FirebaseFirestore.getInstance().collection("workmates")
-                    .document(WorkmateHelper.getWorkmatesCollection().getId()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+
+            db.collection("restaurants").document(mWorkmates.get(position).getRestaurantId()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    restaurantName = (String) documentSnapshot.get("restaurantName");
+                    adress = (String) documentSnapshot.get("adress");
                 }
             });
 
-            holder.mWorkmateRestaurant.setText(" is eating " +restaurantName);
+            holder.mWorkmateRestaurant.setText(" is eating " +mWorkmates.get(position).getRestaurantName());
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent detailsActivity = new Intent(v.getContext(), DetailActivity.class);
+
+                    detailsActivity.putExtra("restaurantName", mWorkmates.get(position).getRestaurantName());
+                    detailsActivity.putExtra("restaurantAdress", adress);
+
                     v.getContext().startActivity(detailsActivity);
                 }
             });

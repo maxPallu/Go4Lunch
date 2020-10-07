@@ -106,7 +106,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
         DetailsResult details = getDetailsFromRestaurant(currentRestaurant.get(position));
         Intent intent = ((Activity) context).getIntent();
 
-        RestaurantHelper.createRestaurant(currentRestaurant.get(position).getPlaceId(), currentRestaurant.get(position).getName(), currentRestaurant.get(position).getId());
+        RestaurantHelper.createRestaurant(currentRestaurant.get(position).getPlaceId(), currentRestaurant.get(position).getName(), currentRestaurant.get(position).getPlaceId(), currentRestaurant.get(position).getVicinity(),
+                "https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&maxheight=800&photoreference=" + currentRestaurant.get(position).getPhotos().get(0).getPhotoReference() + "&key=AIzaSyAcRMUsc5zeKZG5sxZz7-dk-CeT7PtudKA");
 
         holder.restaurantName.setText(currentRestaurant.get(position).getName());
 
@@ -136,7 +137,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
                     holder.restaurantHours.setText(R.string.Close);
                 }
             } else {
-                holder.restaurantHours.setText("Aucune info");
+                holder.restaurantHours.setText(R.string.Info);
             }
 
             if(details.getRating() != null && details.getRating() <= 2) {
@@ -146,6 +147,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
             }
 
         }
+
         Glide.with(context.getApplicationContext()).load("https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&maxheight=800&photoreference=" + currentRestaurant.get(position).getPhotos().get(0).getPhotoReference() + "&key=AIzaSyAcRMUsc5zeKZG5sxZz7-dk-CeT7PtudKA")
                 .apply(RequestOptions.centerCropTransform())
                 .into(holder.resturantPicture);

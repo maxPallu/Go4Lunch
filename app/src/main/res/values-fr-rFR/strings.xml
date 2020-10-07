@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Go4Lunch</string>
-    <string name="Slogan" translatable="false">Trouvez un bon restaurant et invitez vos collègues à manger !</string>
     <string name="MapView">Carte</string>
     <string name="Workmates">Collègues</string>
     <string name="ListView">Liste</string>
@@ -16,4 +15,11 @@
     <string name="Close">Fermé</string>
     <string name="gestion_des_notifications">Gestion des notifications :</string>
     <string name="choix_de_la_langue">Choix de la langue :</string>
+    <string name="Info">Aucune info</string>
+    <string name="navigation_drawer_open">Ouvrir navigation drawer</string>
+    <string name="location_permission_denied">Cet échantillon a besoin de la permission de localisation pour permettre l\'affichage de \\\'ma location\'. Veuillez réessayer et autoriser l\'accès à la localisation.</string>
+    <string name="permission_required_toast">L\'accès à la localisation est nécessaire pour cette essai.</string>
+    <string name="logo">Logo</string>
+    <string name="background">Arrière-plan</string>
+    <string name="navigation_drawer_close">Fermer navigation drawer</string>
 </resources>

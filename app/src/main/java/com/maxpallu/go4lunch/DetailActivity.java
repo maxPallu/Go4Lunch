@@ -13,7 +13,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.maxpallu.go4lunch.api.User;
 import com.maxpallu.go4lunch.api.UserHelper;
@@ -40,12 +42,16 @@ public class DetailActivity extends AppCompatActivity {
     private String restaurantPhone;
     private String restaurantWeb;
     private String restaurantId;
+    private String restaurantPicture;
+    private String restaurantName;
+    private String restaurantAdress;
     private WorkmateApiService mApiService;
     private List<Workmate> mWorkmates;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private WorkmateRecyclerViewAdapter mAdapter = new WorkmateRecyclerViewAdapter(mWorkmates);
     private String userId;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,10 +74,11 @@ public class DetailActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         Intent intent = getIntent();
-        String restaurantName = intent.getStringExtra("restaurantName");
         restaurantId = intent.getStringExtra("restaurantId");
-        String restaurantAdress = intent.getStringExtra("restaurantAdress");
-        String restaurantPicture = intent.getStringExtra("restaurantPicture");
+
+        restaurantName = intent.getStringExtra("restaurantName");
+        restaurantAdress = intent.getStringExtra("restaurantAdress");
+        restaurantPicture = intent.getStringExtra("restaurantPicture");
         restaurantPhone = intent.getStringExtra("restaurantPhone");
         restaurantWeb = intent.getStringExtra("restaurantWeb");
 
@@ -95,6 +102,10 @@ public class DetailActivity extends AppCompatActivity {
                 userId = UserHelper.getUserId();
                 FirebaseFirestore.getInstance().collection("user").document(userId).update("restaurantName", restaurantName);
                 FirebaseFirestore.getInstance().collection("user").document(userId).update("restaurantId", restaurantId);
+                FirebaseFirestore.getInstance().collection("user").document(userId).update("restaurantAdress", restaurantAdress);
+                FirebaseFirestore.getInstance().collection("user").document(userId).update("restaurantPicture", restaurantPicture);
+                FirebaseFirestore.getInstance().collection("user").document(userId).update("restaurantPhone", restaurantPhone);
+                FirebaseFirestore.getInstance().collection("user").document(userId).update("restaurantWeb", restaurantWeb);
                 goRestaurant.setBackgroundTintList(getResources().getColorStateList(R.color.restaurant));
             }
         });
