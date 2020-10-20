@@ -26,6 +26,7 @@ import com.maxpallu.go4lunch.models.Result;
 import com.maxpallu.go4lunch.models.Workmate;
 import com.maxpallu.go4lunch.service.WorkmateApiService;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,7 @@ public class DetailActivity extends AppCompatActivity {
     private String restaurantAdress;
     private WorkmateApiService mApiService;
     private List<Workmate> mWorkmates;
+    private List<Workmate> mClients;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private WorkmateRecyclerViewAdapter mAdapter = new WorkmateRecyclerViewAdapter(mWorkmates);
@@ -65,6 +67,7 @@ public class DetailActivity extends AppCompatActivity {
         call = findViewById(R.id.call);
         like = findViewById(R.id.like);
         goRestaurant = findViewById(R.id.select);
+        userId = UserHelper.getUserId();
 
         mApiService = DI.getService();
 
@@ -116,6 +119,15 @@ public class DetailActivity extends AppCompatActivity {
                 like.setBackgroundTintList(getResources().getColorStateList(R.color.like));
             }
         });
+
+        db.collection("user").document(userId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.get("restaurantName") != null) {
+                    goRestaurant.setBackgroundTintList(getResources().getColorStateList(R.color.restaurant));
+                }
+            }
+        });
     }
 
     public void onCallButton(View v) {
@@ -133,11 +145,15 @@ public class DetailActivity extends AppCompatActivity {
 
     private void initClientList() {
         mWorkmates = mApiService.getWorkmates();
+
         for(int i =0; i<mWorkmates.size(); i++) {
-            if(mWorkmates.get(i).getRestaurantId() == restaurantId) {
-                recyclerView.setAdapter(new WorkmateRecyclerViewAdapter(mWorkmates));
+            String workmateRestaurant = mWorkmates.get(i).getRestaurantName();
+            if(restaurantName.equals(workmateRestaurant)) {
+                mClients.add(mWorkmates.get(i));
             }
         }
+        
+        recyclerView.setAdapter(new WorkmateRecyclerViewAdapter(mClients));
 
       // mWorkmates = mApiService.getWorkmates();
       // recyclerView.setAdapter(new WorkmateRecyclerViewAdapter(mWorkmates));

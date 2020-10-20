@@ -58,6 +58,7 @@ dependencies {
 
     //FIREBASE
     implementation 'com.firebaseui:firebase-ui-firestore:6.2.0'
+    implementation 'com.google.firebase:firebase-messaging:20.3.0'
 
     //FACEBOOK LOGIN
     implementation 'com.facebook.android:facebook-android-sdk:4.42.0'

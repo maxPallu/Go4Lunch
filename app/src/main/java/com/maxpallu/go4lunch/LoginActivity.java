@@ -2,6 +2,8 @@ package com.maxpallu.go4lunch;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.annotation.Nullable;
 
@@ -26,19 +28,40 @@ public class LoginActivity extends BaseActivity {
     private int RC_SIGN_IN_FACEBOOK = 456;
     private int RC_SIGN_IN_EMAIL = 789;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private Button alreadyConnected;
+    private Button facebook;
+    private Button google;
+    private Button email;
+    private Button twitter;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (this.isCurrentUserLogged()) {
-            this.startMainActivity();
-        }
-    }
+        alreadyConnected = findViewById(R.id.button_already_connected);
+        twitter = findViewById(R.id.twitterLogin);
+        email = findViewById(R.id.emailSignIn);
 
-    @Override
-    public int getFragmentLayout() {
-        return R.layout.login_activity;
+        alreadyConnected.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startMainActivity();
+            }
+        });
+
+        twitter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startTwitterLogin();
+            }
+        });
+
+        email.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startEmailLogin();
+            }
+        });
     }
 
     @OnClick(R.id.login_button)
@@ -51,14 +74,33 @@ public class LoginActivity extends BaseActivity {
         this.startGoogleSign();
     }
 
-    @OnClick(R.id.twitterLogin)
-    public void onClickTwitterLogin() {
-        this.startTwitterLogin();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        resumeUI();
     }
 
-    @OnClick(R.id.emailSignIn)
-    public void onClickEmailLogin() {
-        this.startEmailLogin();
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        this.handleResponseAfterSignIn(requestCode, resultCode, data);
+    }
+
+    @Override
+    public int getFragmentLayout() {
+        return R.layout.login_activity;
+    }
+
+    private void resumeUI() {
+        if(this.isCurrentUserLogged()) {
+            alreadyConnected.setVisibility(View.VISIBLE);
+            twitter.setVisibility(View.GONE);
+            email.setVisibility(View.GONE);
+        } else {
+            alreadyConnected.setVisibility(View.GONE);
+            twitter.setVisibility(View.VISIBLE);
+            email.setVisibility(View.VISIBLE);
+        }
     }
 
     private void startFacebookLogin() {
@@ -69,7 +111,6 @@ public class LoginActivity extends BaseActivity {
                         .setIsSmartLockEnabled(false, true)
                         .build(),
                 RC_SIGN_IN_FACEBOOK);
-        startMainActivity();
     }
 
     private void startEmailLogin() {
@@ -80,7 +121,6 @@ public class LoginActivity extends BaseActivity {
                 .setIsSmartLockEnabled(false, true)
                 .build(),
                 RC_SIGN_IN_EMAIL);
-        startMainActivity();
     }
 
     private void startTwitterLogin() {
@@ -95,23 +135,36 @@ public class LoginActivity extends BaseActivity {
                         .setIsSmartLockEnabled(false, true)
                         .build(),
                 RC_SIGN_IN_GOOGLE);
-        startMainActivity();
+    }
+
+    private void handleResponseAfterSignIn(int requestCode, int resultCode, Intent data) {
+        if (requestCode == RC_SIGN_IN_GOOGLE || requestCode == RC_SIGN_IN_FACEBOOK || requestCode == RC_SIGN_IN_EMAIL) {
+            if (resultCode == RESULT_OK) {
+                this.createUser();
+                startMainActivity();
+            }
+        }
     }
 
     private void startMainActivity() {
-        Map<String, String> user = new HashMap<>();
-        user.put("id", this.getCurrentUser().getUid());
-        user.put("name", this.getCurrentUser().getDisplayName());
-        user.put("urlPicture", this.getCurrentUser().getPhotoUrl().toString());
-        user.put("mail", this.getCurrentUser().getEmail());
-        user.put("restaurantName", null);
-        user.put("restaurantId", null);
-        user.put("restaurantAdress", null);
-        user.put("restaurantPicture", null);
-        user.put("restaurantWeb", null);
-        user.put("restaurantPhone", null);
-        db.collection("user").document(getCurrentUser().getUid()).set(user);
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+       Intent intent = new Intent(this, MainActivity.class);
+       startActivity(intent);
+    }
+
+    private void createUser() {
+        if(this.isCurrentUserLogged()) {
+            Map<String, String> user = new HashMap<>();
+            user.put("id", this.getCurrentUser().getUid());
+            user.put("name", this.getCurrentUser().getDisplayName());
+            user.put("urlPicture", this.getCurrentUser().getPhotoUrl().toString());
+            user.put("mail", this.getCurrentUser().getEmail());
+            user.put("restaurantName", null);
+            user.put("restaurantId", null);
+            user.put("restaurantAdress", null);
+            user.put("restaurantPicture", null);
+            user.put("restaurantWeb", null);
+            user.put("restaurantPhone", null);
+            db.collection("user").document(getCurrentUser().getUid()).set(user);
+        }
     }
 }

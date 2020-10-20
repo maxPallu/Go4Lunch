@@ -47,7 +47,7 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
     private PlaceDetailsResponse mDetails = new PlaceDetailsResponse();
     private MyAdapter mAdapter = new MyAdapter(mRestaurants);
     private Context context;
-    private boolean permissionDenied;
+    private Boolean permissionDenied = false;
 
     public ListFragment newInstance() {
         ListFragment fragment = new ListFragment();
