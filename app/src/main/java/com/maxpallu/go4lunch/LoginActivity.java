@@ -9,11 +9,16 @@ import androidx.annotation.Nullable;
 
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.TwitterAuthProvider;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.maxpallu.go4lunch.api.User;
 import com.maxpallu.go4lunch.api.UserHelper;
 import com.maxpallu.go4lunch.base.BaseActivity;
+import com.twitter.sdk.android.core.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterConfig;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,6 +32,7 @@ public class LoginActivity extends BaseActivity {
     private int RC_SIGN_IN_GOOGLE = 123;
     private int RC_SIGN_IN_FACEBOOK = 456;
     private int RC_SIGN_IN_EMAIL = 789;
+    private int RC_SIGN_IN_TWIITER = 246;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private Button alreadyConnected;
     private Button facebook;
@@ -40,6 +46,7 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         alreadyConnected = findViewById(R.id.button_already_connected);
         twitter = findViewById(R.id.twitterLogin);
+        Twitter.initialize(this);
         email = findViewById(R.id.emailSignIn);
 
         alreadyConnected.setOnClickListener(new View.OnClickListener() {
@@ -94,12 +101,8 @@ public class LoginActivity extends BaseActivity {
     private void resumeUI() {
         if(this.isCurrentUserLogged()) {
             alreadyConnected.setVisibility(View.VISIBLE);
-            twitter.setVisibility(View.GONE);
-            email.setVisibility(View.GONE);
         } else {
             alreadyConnected.setVisibility(View.GONE);
-            twitter.setVisibility(View.VISIBLE);
-            email.setVisibility(View.VISIBLE);
         }
     }
 
@@ -124,7 +127,13 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void startTwitterLogin() {
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(getString(R.string.com_twitter_sdk_android_CONSUMER_KEY), getString(R.string.com_twitter_sdk_android_CONSUMER_SECRET));
 
+        TwitterConfig twitterConfig = new TwitterConfig.Builder(this)
+                .twitterAuthConfig(authConfig)
+                .build();
+
+        Twitter.initialize(twitterConfig);
     }
 
     private void startGoogleSign() {

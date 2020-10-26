@@ -8,6 +8,10 @@
     <string name="facebook_application_id" translatable="false">1635588596605227</string>
     <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb1635588596605227</string>
 
+    <!-- TWITTER PURPOSE -->
+    <string name="com.twitter.sdk.android.CONSUMER_KEY" translatable="false">7XbUKyrbUvuEKVP84dQyW9NoW</string>
+    <string name="com.twitter.sdk.android.CONSUMER_SECRET" translatable="false">BjP0MquWe11OnNdnj0y9KOsUl1sV8LuHjpMEEzqOIezpNAOXl7</string>
+
     <!-- BOTTOM NAVIGATION VIEW -->
     <string name="MapView">Map View</string>
     <string name="ListView">List View</string>
@@ -36,5 +40,8 @@
     <string name="default_notification_channel_id" translatable="false">17</string>
     <string name="choix_de_la_langue">Choose language</string>
     <string name="Info">No information</string>
+
+    <string name="channel_name" translatable="false">My Channel</string>
+    <string name="channel_description" translatable="false">description</string>
 
 </resources>

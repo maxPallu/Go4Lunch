@@ -1,12 +1,21 @@
 package com.maxpallu.go4lunch;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,6 +36,7 @@ import com.maxpallu.go4lunch.models.Workmate;
 import com.maxpallu.go4lunch.service.WorkmateApiService;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,11 +58,12 @@ public class DetailActivity extends AppCompatActivity {
     private String restaurantAdress;
     private WorkmateApiService mApiService;
     private List<Workmate> mWorkmates;
-    private List<Workmate> mClients;
+    private List<Workmate> mClients = new ArrayList<>();
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private WorkmateRecyclerViewAdapter mAdapter = new WorkmateRecyclerViewAdapter(mWorkmates);
     private String userId;
+    private String CHANNEL_ID = "17";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
@@ -110,6 +121,7 @@ public class DetailActivity extends AppCompatActivity {
                 FirebaseFirestore.getInstance().collection("user").document(userId).update("restaurantPhone", restaurantPhone);
                 FirebaseFirestore.getInstance().collection("user").document(userId).update("restaurantWeb", restaurantWeb);
                 goRestaurant.setBackgroundTintList(getResources().getColorStateList(R.color.restaurant));
+                createNotification(restaurantName);
             }
         });
 
@@ -154,9 +166,6 @@ public class DetailActivity extends AppCompatActivity {
         }
         
         recyclerView.setAdapter(new WorkmateRecyclerViewAdapter(mClients));
-
-      // mWorkmates = mApiService.getWorkmates();
-      // recyclerView.setAdapter(new WorkmateRecyclerViewAdapter(mWorkmates));
     }
 
     @Override
@@ -164,4 +173,33 @@ public class DetailActivity extends AppCompatActivity {
         super.onResume();
         initClientList();
     }
+
+    private void createNotification(String restaurant) {
+        createNotificationChannel();
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_image_notification)
+                .setContentTitle("Rappel")
+                .setContentText("Vous mangez à "+restaurant+" avec vos collègues !")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+
+        notificationManager.notify(1, builder.build());
+
+        AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+    }
+
+    private void createNotificationChannel() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+
 }
