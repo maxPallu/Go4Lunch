@@ -33,6 +33,7 @@ import com.maxpallu.go4lunch.base.BaseActivity;
 import com.maxpallu.go4lunch.di.DI;
 import com.maxpallu.go4lunch.models.Result;
 import com.maxpallu.go4lunch.models.Workmate;
+import com.maxpallu.go4lunch.notifications.ReminderBroadcast;
 import com.maxpallu.go4lunch.service.WorkmateApiService;
 
 import java.util.ArrayList;
@@ -65,6 +66,8 @@ public class DetailActivity extends AppCompatActivity {
     private String userId;
     private String CHANNEL_ID = "17";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private AlarmManager alarmMgr;
+    private PendingIntent alarmIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +124,7 @@ public class DetailActivity extends AppCompatActivity {
                 FirebaseFirestore.getInstance().collection("user").document(userId).update("restaurantPhone", restaurantPhone);
                 FirebaseFirestore.getInstance().collection("user").document(userId).update("restaurantWeb", restaurantWeb);
                 goRestaurant.setBackgroundTintList(getResources().getColorStateList(R.color.restaurant));
-                createNotification(restaurantName);
+                createNotification();
             }
         });
 
@@ -174,19 +177,20 @@ public class DetailActivity extends AppCompatActivity {
         initClientList();
     }
 
-    private void createNotification(String restaurant) {
+    private void createNotification() {
         createNotificationChannel();
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_image_notification)
-                .setContentTitle("Rappel")
-                .setContentText("Vous mangez à "+restaurant+" avec vos collègues !")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        Intent intent = new Intent(this.getApplicationContext(), ReminderBroadcast.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, intent, 0);
 
-        notificationManager.notify(1, builder.build());
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-        AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 12);
+        calendar.set(Calendar.MINUTE, 0);
+
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 
     private void createNotificationChannel() {
