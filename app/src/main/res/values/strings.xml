@@ -43,5 +43,8 @@
 
     <string name="channel_name" translatable="false">My Channel</string>
     <string name="channel_description" translatable="false">description</string>
+    <string name="notif_choice">"You're eating at "</string>
+    <string name="notif_with">" with "</string>
+    <string name="connected">Already logged in</string>
 
 </resources>

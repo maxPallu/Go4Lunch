@@ -21,4 +21,7 @@
     <string name="logo">Logo</string>
     <string name="background">Arrière-plan</string>
     <string name="navigation_drawer_close">Fermer navigation drawer</string>
+    <string name="notif_choice">"Vous mangez à "</string>
+    <string name="notif_with">" avec  "</string>
+    <string name="connected">Déjà connecté</string>
 </resources>
