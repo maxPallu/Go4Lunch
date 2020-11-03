@@ -55,6 +55,10 @@ dependencies {
     //FIREBASE AUTH
     implementation "com.google.firebase:firebase-core:17.4.4"
     implementation 'com.firebaseui:firebase-ui-auth:6.2.0'
+    implementation platform('com.google.firebase:firebase-bom:26.0.0')
+    implementation 'com.google.firebase:firebase-auth'
+
+
     //FIREBASE
     implementation 'com.firebaseui:firebase-ui-firestore:6.2.0'
     implementation 'com.google.firebase:firebase-messaging:20.3.0'

@@ -26,10 +26,11 @@ public class ReminderBroadcast extends BroadcastReceiver {
     private String restaurant;
     private String userId = UserHelper.getUserId();
     private String CHANNEL_ID = "17";
+    private String nameWorkmates;
     private int requestId = 100;
     private WorkmateApiService mApi = DI.getService();
     private List<Workmate> mWorkmates = mApi.getWorkmates();
-    private Workmate mClients;
+    private List<Workmate> mClients;
 
 
     @Override
@@ -45,7 +46,7 @@ public class ReminderBroadcast extends BroadcastReceiver {
                 for(int i = 0; i<mWorkmates.size(); i++) {
                     String workmateRestaurant = mWorkmates.get(i).getRestaurantName();
                     if(restaurant.equals(workmateRestaurant)) {
-                        mClients = mWorkmates.get(i);
+                        mClients.add(mWorkmates.get(i));
                     }
                 }
 
@@ -56,10 +57,14 @@ public class ReminderBroadcast extends BroadcastReceiver {
 
     private void sendNotification(Context context) {
 
+        for(int i = 0; i<mClients.size(); i++) {
+            nameWorkmates = mClients.get(i).getName();
+        }
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_image_notification)
                 .setContentTitle("Rappel")
-                .setContentText(context.getString(R.string.notif_choice)+restaurant+ context.getString(R.string.notif_with) +mClients.getName())
+                .setContentText(context.getString(R.string.notif_choice)+restaurant+ context.getString(R.string.notif_with) +nameWorkmates)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);

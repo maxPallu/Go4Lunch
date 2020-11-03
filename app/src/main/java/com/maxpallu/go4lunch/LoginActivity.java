@@ -12,7 +12,10 @@ import androidx.annotation.Nullable;
 
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.OAuthProvider;
@@ -50,7 +53,7 @@ public class LoginActivity extends BaseActivity {
     private Button facebook;
     private Button google;
     private Button email;
-    private TwitterLoginButton twitter;
+    private Button twitter;
 
 
     @Override
@@ -60,32 +63,27 @@ public class LoginActivity extends BaseActivity {
         twitter = findViewById(R.id.twitterLogin);
         email = findViewById(R.id.emailSignIn);
 
-        TwitterAuthConfig authConfig = new TwitterAuthConfig(getString(R.string.com_twitter_sdk_android_CONSUMER_KEY), getString(R.string.com_twitter_sdk_android_CONSUMER_SECRET));
-
-        TwitterConfig twitterConfig = new TwitterConfig.Builder(this)
-                .logger(new DefaultLogger(Log.DEBUG))
-                .twitterAuthConfig(authConfig)
-                .build();
-
-        twitter.setCallback(new Callback<TwitterSession>() {
-            @Override
-            public void success(Result<TwitterSession> result) {
-                signInWithTwitter(result.data);
-                twitter.setVisibility(View.VISIBLE);
-                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            }
-
-            @Override
-            public void failure(TwitterException exception) {
-
-            }
-        });
-
-        Twitter.initialize(twitterConfig);
-        Twitter.getInstance();
-        setContentView(R.layout.login_activity);
-
         mAuth = FirebaseAuth.getInstance();
+
+        OAuthProvider.Builder provider = OAuthProvider.newBuilder("twitter.com");
+
+        Task<AuthResult> pendingResultTask = mAuth.getPendingAuthResult();
+        if(pendingResultTask != null) {
+            pendingResultTask.addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                @Override
+                public void onSuccess(AuthResult authResult) {
+                    authResult.getAdditionalUserInfo().getProfile();
+                }
+            });
+        } else {
+            mAuth.startActivityForSignInWithProvider(this, provider.build())
+                    .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                        @Override
+                        public void onSuccess(AuthResult authResult) {
+                            createUser();
+                        }
+                    });
+        }
 
         alreadyConnected.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,7 +102,7 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.twitterLogin)
     public void onClickTwitterLogin() {
-        Toast.makeText(this, "Log In Button Clicked", Toast.LENGTH_SHORT).show();
+        this.signInWithTwitter();
     }
 
     @OnClick(R.id.login_button)
@@ -162,7 +160,7 @@ public class LoginActivity extends BaseActivity {
                 RC_SIGN_IN_EMAIL);
     }
 
-    private void signInWithTwitter(TwitterSession session) {
+    private void signInWithTwitter() {
         startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
@@ -170,11 +168,6 @@ public class LoginActivity extends BaseActivity {
                         .setIsSmartLockEnabled(false, true)
                         .build(),
                 RC_SIGN_IN_TWIITER);
-
-        AuthCredential credential = TwitterAuthProvider.getCredential(session.getAuthToken().token,
-                session.getAuthToken().secret);
-
-        mAuth.signInWithCredential(credential);
     }
 
     private void startGoogleSign() {
