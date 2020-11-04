@@ -18,6 +18,7 @@ import com.maxpallu.go4lunch.di.DI;
 import com.maxpallu.go4lunch.models.Workmate;
 import com.maxpallu.go4lunch.service.WorkmateApiService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ReminderBroadcast extends BroadcastReceiver {
@@ -30,7 +31,7 @@ public class ReminderBroadcast extends BroadcastReceiver {
     private int requestId = 100;
     private WorkmateApiService mApi = DI.getService();
     private List<Workmate> mWorkmates = mApi.getWorkmates();
-    private List<Workmate> mClients;
+    private List<Workmate> mClients = new ArrayList<>();
 
 
     @Override
