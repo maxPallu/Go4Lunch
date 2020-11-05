@@ -8,10 +8,12 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -65,30 +67,11 @@ public class LoginActivity extends BaseActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        OAuthProvider.Builder provider = OAuthProvider.newBuilder("twitter.com");
-
-        Task<AuthResult> pendingResultTask = mAuth.getPendingAuthResult();
-        if(pendingResultTask != null) {
-            pendingResultTask.addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                @Override
-                public void onSuccess(AuthResult authResult) {
-                    authResult.getAdditionalUserInfo().getProfile();
-                }
-            });
-        } else {
-            mAuth.startActivityForSignInWithProvider(this, provider.build())
-                    .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                        @Override
-                        public void onSuccess(AuthResult authResult) {
-                            createUser();
-                        }
-                    });
-        }
-
         alreadyConnected.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startMainActivity();
+                createUser();
             }
         });
 
@@ -102,7 +85,32 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.twitterLogin)
     public void onClickTwitterLogin() {
-        this.signInWithTwitter();
+        OAuthProvider.Builder provider = OAuthProvider.newBuilder("twitter.com");
+
+        Task<AuthResult> pendingResultTask = mAuth.getPendingAuthResult();
+        if(pendingResultTask != null) {
+            pendingResultTask.addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                @Override
+                public void onSuccess(AuthResult authResult) {
+
+                }
+            });
+        } else {
+            mAuth.startActivityForSignInWithProvider(this, provider.build())
+                    .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                        @Override
+                        public void onSuccess(AuthResult authResult) {
+                            signInWithTwitter();
+                            twitter.setText("Logged in");
+                        }
+                    })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+
+                }
+            });
+        }
     }
 
     @OnClick(R.id.login_button)

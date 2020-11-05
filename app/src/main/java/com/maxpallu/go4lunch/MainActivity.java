@@ -15,6 +15,8 @@ import androidx.fragment.app.Fragment;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,8 +34,11 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.maxpallu.go4lunch.api.Restaurant;
+import com.maxpallu.go4lunch.util.RestaurantService;
 import com.maxpallu.go4lunch.views.MyAdapter;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -83,16 +88,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (item.getItemId()) {
             case R.id.searchView:
 
-                List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        String location = searchView.getQuery().toString();
+                        List<Address> addressList = null;
 
-                Intent intent = new Autocomplete.IntentBuilder(
-                        AutocompleteActivityMode.OVERLAY, fields)
-                        .setTypeFilter(TypeFilter.ESTABLISHMENT)
-                        .build(this);
+                        if(location != null || !location.equals("")) {
+                            Geocoder geocoder = new Geocoder(MainActivity.this);
+                            try {
+                                addressList = geocoder.getFromLocationName(location, 1);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            Address address = addressList.get(0);
+                        }
 
-                startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+                        return false;
+                    }
 
-                return true;
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        return false;
+                    }
+                });
+
+                return false;
 
             default:
                 return super.onOptionsItemSelected(item);

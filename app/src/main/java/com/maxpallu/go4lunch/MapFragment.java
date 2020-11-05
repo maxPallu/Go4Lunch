@@ -3,10 +3,13 @@ package com.maxpallu.go4lunch;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -14,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -32,6 +36,9 @@ import com.google.android.gms.tasks.Task;
 import com.maxpallu.go4lunch.util.PermissionUtils;
 import com.maxpallu.go4lunch.views.MyAdapter;
 
+import java.io.IOException;
+import java.util.List;
+
 
 public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener, OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
 
@@ -39,6 +46,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private boolean permissionDenied = false;
     private GoogleMap mMap;
+    private SearchView searchView;
     private FusedLocationProviderClient mFusedLocationProviderClient;
 
     public MapFragment() {
@@ -56,6 +64,46 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
         super.onActivityCreated(bundle);
         mMapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map);
         mMapFragment.getMapAsync(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.searchView:
+
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        String location = searchView.getQuery().toString();
+                        List<Address> addressList = null;
+
+                        if(location != null || !location.equals("")) {
+                            Geocoder geocoder = new Geocoder(MapFragment.this.getContext());
+                            try {
+                                addressList = geocoder.getFromLocationName(location, 3);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            Address address = addressList.get(0);
+                            LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                            mMap.addMarker(new MarkerOptions().position(latLng).title(location));
+                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                        }
+
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        return false;
+                    }
+                });
+
+                mMapFragment.getMapAsync(this);
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

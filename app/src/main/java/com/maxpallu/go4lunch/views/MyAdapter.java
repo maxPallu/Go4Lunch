@@ -28,9 +28,11 @@ import com.maxpallu.go4lunch.WorkmateRecyclerViewAdapter;
 import com.maxpallu.go4lunch.WorkmatesFragment;
 import com.maxpallu.go4lunch.api.Restaurant;
 import com.maxpallu.go4lunch.api.RestaurantHelper;
+import com.maxpallu.go4lunch.di.DI;
 import com.maxpallu.go4lunch.models.DetailsResult;
 import com.maxpallu.go4lunch.models.Restaurants;
 import com.maxpallu.go4lunch.models.Result;
+import com.maxpallu.go4lunch.models.Workmate;
 import com.maxpallu.go4lunch.util.ApiCalls;
 
 import java.io.Serializable;
@@ -55,6 +57,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
         private TextView restaurantDistance;
         private ImageView resturantPicture;
         private ImageView restaurantRatings;
+        private TextView user_number;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -64,6 +67,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
             resturantPicture = itemView.findViewById(R.id.restaurant_picture);
             restaurantDistance = itemView.findViewById(R.id.restaurant_distance);
             restaurantRatings = itemView.findViewById(R.id.ratings);
+            user_number = itemView.findViewById(R.id.user_number);
+
         }
     }
 
@@ -103,6 +108,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         List<Result> currentRestaurant = mResults;
+        int numberWorkmate = 0;
+
         DetailsResult details = getDetailsFromRestaurant(currentRestaurant.get(position));
         Intent intent = ((Activity) context).getIntent();
 
@@ -112,6 +119,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
         holder.restaurantName.setText(currentRestaurant.get(position).getName());
 
         holder.restaurantAdress.setText(currentRestaurant.get(position).getVicinity());
+
+        List<Workmate> mWorkmates = DI.getService().getWorkmates();
+
+        for(int i = 0; i<mWorkmates.size(); i++) {
+            if(mWorkmates.get(i).getRestaurantName() != null) {
+                if(mWorkmates.get(i).getRestaurantName().equals(currentRestaurant.get(position).getName())) {
+                    numberWorkmate++;
+                }
+            }
+            holder.user_number.setText("("+numberWorkmate+")");
+        }
 
         if(userLatLng != null) {
             double userLatitude = userLatLng.latitude;
