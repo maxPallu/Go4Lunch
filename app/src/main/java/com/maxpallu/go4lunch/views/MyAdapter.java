@@ -29,7 +29,10 @@ import com.maxpallu.go4lunch.WorkmatesFragment;
 import com.maxpallu.go4lunch.api.Restaurant;
 import com.maxpallu.go4lunch.api.RestaurantHelper;
 import com.maxpallu.go4lunch.di.DI;
+import com.maxpallu.go4lunch.models.AutocompleteResult;
 import com.maxpallu.go4lunch.models.DetailsResult;
+import com.maxpallu.go4lunch.models.PlaceAutocompleteResponse;
+import com.maxpallu.go4lunch.models.PlaceDetailsResponse;
 import com.maxpallu.go4lunch.models.Restaurants;
 import com.maxpallu.go4lunch.models.Result;
 import com.maxpallu.go4lunch.models.Workmate;
@@ -45,6 +48,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
     private List<Result> mResults = new ArrayList<Result>();
     private List<Result> mResultsFull;
     private List<DetailsResult> mDetails = new ArrayList<>();
+    private List<AutocompleteResult> mAutocomplete = new ArrayList<>();
     private Restaurants mRestaurants;
     private Context context;
     private LatLng userLatLng;
@@ -91,6 +95,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
     public void updateResults(List<Result> results) {
         mResults.clear();
         mResults.addAll(results);
+        notifyDataSetChanged();
+    }
+
+    public void updateWithAutocomple(AutocompleteResult results) {
+        mAutocomplete.add(results);
         notifyDataSetChanged();
     }
 

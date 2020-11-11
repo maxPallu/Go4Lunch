@@ -11,6 +11,7 @@ import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -35,18 +36,26 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.maxpallu.go4lunch.api.Restaurant;
+import com.maxpallu.go4lunch.models.AutocompleteResult;
+import com.maxpallu.go4lunch.models.PlaceAutocompleteResponse;
+import com.maxpallu.go4lunch.models.PlaceDetailsResponse;
+import com.maxpallu.go4lunch.models.Restaurants;
+import com.maxpallu.go4lunch.util.ApiCalls;
 import com.maxpallu.go4lunch.util.RestaurantService;
 import com.maxpallu.go4lunch.views.MyAdapter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ApiCalls.Callbacks {
     private DrawerLayout drawer;
     private SearchView searchView;
     private static final int AUTOCOMPLETE_REQUEST_CODE = 1;
     private MyAdapter mAdapter;
+    private RecyclerView recyclerView;
+    private List<AutocompleteResult> mResults = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         //toolbar.inflateMenu(R.menu.menu);
+
+        recyclerView = findViewById(R.id.list_recycler_view);
 
         drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -73,6 +84,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MapFragment()).commit();
+    }
+
+    private void executeRetrofit(String input){
+        ApiCalls.fetchAutocomplete(this, input);
     }
 
     @Override
@@ -91,24 +106,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                     @Override
                     public boolean onQueryTextSubmit(String query) {
-                        String location = searchView.getQuery().toString();
-                        List<Address> addressList = null;
+                        executeRetrofit(query);
 
-                        if(location != null || !location.equals("")) {
-                            Geocoder geocoder = new Geocoder(MainActivity.this);
-                            try {
-                                addressList = geocoder.getFromLocationName(location, 1);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            Address address = addressList.get(0);
-                        }
-
-                        return false;
+                        return true;
                     }
 
                     @Override
                     public boolean onQueryTextChange(String newText) {
+
+                        executeRetrofit(newText);
                         return false;
                     }
                 });
@@ -185,5 +191,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
 
         return true;
+    }
+
+    @Override
+    public void onDetailsResponse(PlaceDetailsResponse placeDetailsResponse) {
+
+    }
+
+    @Override
+    public void onResponse(@Nullable Restaurants restaurants) {
+
+    }
+
+    @Override
+    public void onAutocompleteResponse(AutocompleteResult placeAutocompleteResponse) {
+        mResults.add(placeAutocompleteResponse);
+    }
+
+    @Override
+    public void onFailure() {
+
     }
 }

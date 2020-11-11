@@ -2,6 +2,8 @@ package com.maxpallu.go4lunch.util;
 
 import androidx.annotation.Nullable;
 
+import com.maxpallu.go4lunch.models.AutocompleteResult;
+import com.maxpallu.go4lunch.models.PlaceAutocompleteResponse;
 import com.maxpallu.go4lunch.models.PlaceDetailsResponse;
 import com.maxpallu.go4lunch.models.Restaurants;
 
@@ -16,6 +18,7 @@ public class ApiCalls {
     public interface Callbacks {
         void onDetailsResponse(PlaceDetailsResponse placeDetailsResponse);
         void onResponse(@Nullable Restaurants restaurants);
+        void onAutocompleteResponse(AutocompleteResult placeAutocompleteResponse);
         void onFailure();
     }
 
@@ -52,6 +55,27 @@ public class ApiCalls {
             @Override
             public void onFailure(Call<Restaurants> call, Throwable t) {
                 if (callbacksWeakReference.get() != null) callbacksWeakReference.get().onFailure();
+            }
+        });
+    }
+
+    public static void fetchAutocomplete(Callbacks callbacks, String input) {
+
+        final WeakReference<Callbacks> callbacksWeakReference = new WeakReference<>(callbacks);
+
+        RestaurantService restaurantService = RestaurantService.retrofit.create(RestaurantService.class);
+
+        Call<AutocompleteResult> call = restaurantService.getAutocomplete(input);
+
+        call.enqueue(new Callback<AutocompleteResult>() {
+            @Override
+            public void onResponse(Call<AutocompleteResult> call, Response<AutocompleteResult> response) {
+                callbacksWeakReference.get().onAutocompleteResponse(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<AutocompleteResult> call, Throwable t) {
+                if(callbacksWeakReference.get() != null) callbacksWeakReference.get().onFailure();
             }
         });
     }

@@ -24,7 +24,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.maxpallu.go4lunch.models.AutocompleteResult;
 import com.maxpallu.go4lunch.models.DetailsResult;
+import com.maxpallu.go4lunch.models.PlaceAutocompleteResponse;
 import com.maxpallu.go4lunch.models.PlaceDetailsResponse;
 import com.maxpallu.go4lunch.models.Restaurants;
 import com.maxpallu.go4lunch.models.Result;
@@ -92,6 +94,10 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
         mAdapter.updateDetails(response.getResult());
     }
 
+    private void updateUIWithAutocomplete(AutocompleteResult result) {
+        mAdapter.updateWithAutocomple(result);
+    }
+
     private void updateLocation(double lat, double lng) {
         mAdapter.updateLatLng(lat, lng);
     }
@@ -152,6 +158,14 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
             mRestaurants = restaurants;
         }
     }
+
+    @Override
+    public void onAutocompleteResponse(AutocompleteResult placeAutocompleteResponse) {
+        if(placeAutocompleteResponse != null) {
+            this.updateUIWithAutocomplete(placeAutocompleteResponse);
+        }
+    }
+
 
     @Override
     public void onFailure() {
