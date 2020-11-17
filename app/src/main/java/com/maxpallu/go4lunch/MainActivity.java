@@ -39,6 +39,7 @@ import com.maxpallu.go4lunch.api.Restaurant;
 import com.maxpallu.go4lunch.models.AutocompleteResult;
 import com.maxpallu.go4lunch.models.PlaceAutocompleteResponse;
 import com.maxpallu.go4lunch.models.PlaceDetailsResponse;
+import com.maxpallu.go4lunch.models.Predictions;
 import com.maxpallu.go4lunch.models.Restaurants;
 import com.maxpallu.go4lunch.util.ApiCalls;
 import com.maxpallu.go4lunch.util.RestaurantService;
@@ -55,7 +56,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int AUTOCOMPLETE_REQUEST_CODE = 1;
     private MyAdapter mAdapter;
     private RecyclerView recyclerView;
-    private List<AutocompleteResult> mResults = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,45 +86,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MapFragment()).commit();
     }
 
-    private void executeRetrofit(String input){
-        ApiCalls.fetchAutocomplete(this, input);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.searchView:
-
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
-                        executeRetrofit(query);
-
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-
-                        executeRetrofit(newText);
-                        return false;
-                    }
-                });
-
-                return false;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -204,9 +165,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onAutocompleteResponse(AutocompleteResult placeAutocompleteResponse) {
-        mResults.add(placeAutocompleteResponse);
+    public void onAutocompleteResponse(Predictions placeAutocompleteResponse) {
+
     }
+
 
     @Override
     public void onFailure() {

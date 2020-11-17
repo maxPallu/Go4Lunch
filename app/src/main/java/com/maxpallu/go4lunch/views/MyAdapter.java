@@ -3,6 +3,7 @@ package com.maxpallu.go4lunch.views;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.gesture.Prediction;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -33,6 +34,7 @@ import com.maxpallu.go4lunch.models.AutocompleteResult;
 import com.maxpallu.go4lunch.models.DetailsResult;
 import com.maxpallu.go4lunch.models.PlaceAutocompleteResponse;
 import com.maxpallu.go4lunch.models.PlaceDetailsResponse;
+import com.maxpallu.go4lunch.models.Predictions;
 import com.maxpallu.go4lunch.models.Restaurants;
 import com.maxpallu.go4lunch.models.Result;
 import com.maxpallu.go4lunch.models.Workmate;
@@ -43,13 +45,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implements Filterable {
+public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     private List<Result> mResults = new ArrayList<Result>();
     private List<Result> mResultsFull;
     private List<DetailsResult> mDetails = new ArrayList<>();
-    private List<AutocompleteResult> mAutocomplete = new ArrayList<>();
-    private Restaurants mRestaurants;
+    private List<Predictions> mAutocomplete = new ArrayList<>();
     private Context context;
     private LatLng userLatLng;
 
@@ -77,7 +78,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
     }
 
     public MyAdapter(Restaurants restaurants) {
-        mRestaurants = restaurants;
         mResultsFull = new ArrayList<>(mResults);
     }
 
@@ -98,7 +98,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
         notifyDataSetChanged();
     }
 
-    public void updateWithAutocomple(AutocompleteResult results) {
+    public void updateWithAutocomple(Predictions results) {
         mAutocomplete.add(results);
         notifyDataSetChanged();
     }
@@ -212,41 +212,5 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implem
     public int getItemCount() {
         return mResults.size();
     }
-
-    @Override
-    public Filter getFilter() {
-        return myFilter;
-    }
-
-    private Filter myFilter = new Filter() {
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            List<Result> filteredList = new ArrayList<>();
-            filteredList = mResults;
-            if (constraint == null || constraint.length() == 0) {
-                filteredList.addAll(mResultsFull);
-            } else {
-                String filterPattern = constraint.toString().toLowerCase().trim();
-
-                for (Result result : mResultsFull) {
-                    if (result.getName().toLowerCase().contains(filterPattern)) {
-                        filteredList.add(result);
-                    }
-                }
-            }
-
-            FilterResults results = new FilterResults();
-            results.values = filteredList;
-
-            return results;
-        }
-
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            mResults.clear();
-            mResults.addAll((List) results.values);
-            notifyDataSetChanged();
-        }
-    };
 
 }

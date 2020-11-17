@@ -1,18 +1,23 @@
-package com.maxpallu.go4lunch;
+ package com.maxpallu.go4lunch;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.gesture.Prediction;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,6 +33,7 @@ import com.maxpallu.go4lunch.models.AutocompleteResult;
 import com.maxpallu.go4lunch.models.DetailsResult;
 import com.maxpallu.go4lunch.models.PlaceAutocompleteResponse;
 import com.maxpallu.go4lunch.models.PlaceDetailsResponse;
+import com.maxpallu.go4lunch.models.Predictions;
 import com.maxpallu.go4lunch.models.Restaurants;
 import com.maxpallu.go4lunch.models.Result;
 import com.maxpallu.go4lunch.util.ApiCalls;
@@ -50,6 +56,7 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
     private MyAdapter mAdapter = new MyAdapter(mRestaurants);
     private Context context;
     private Boolean permissionDenied = false;
+    private Predictions mResults;
 
     public ListFragment newInstance() {
         ListFragment fragment = new ListFragment();
@@ -80,10 +87,36 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
 
         getDeviceLocation();
 
+        setHasOptionsMenu(true);
+
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         this.executeHttpRequestWithRetrofit();
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.menu, menu);
+        MenuItem item = menu.findItem(R.id.searchView);
+        SearchView searchView = (SearchView) item.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                executeRetrofit(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+    }
+
+    private void executeRetrofit(String input){
+        ApiCalls.fetchAutocomplete(this, input);
     }
 
     private void updateUIWithRestaurants(Restaurants restaurants) {
@@ -94,7 +127,7 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
         mAdapter.updateDetails(response.getResult());
     }
 
-    private void updateUIWithAutocomplete(AutocompleteResult result) {
+    private void updateUIWithAutocomplete(Predictions result) {
         mAdapter.updateWithAutocomple(result);
     }
 
@@ -160,10 +193,9 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
     }
 
     @Override
-    public void onAutocompleteResponse(AutocompleteResult placeAutocompleteResponse) {
-        if(placeAutocompleteResponse != null) {
-            this.updateUIWithAutocomplete(placeAutocompleteResponse);
-        }
+    public void onAutocompleteResponse(Predictions placeAutocompleteResponse) {
+        mResults = placeAutocompleteResponse;
+        this.updateUIWithAutocomplete(mResults);
     }
 
 

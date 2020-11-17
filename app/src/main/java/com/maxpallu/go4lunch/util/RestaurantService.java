@@ -3,6 +3,7 @@ package com.maxpallu.go4lunch.util;
 import com.maxpallu.go4lunch.models.AutocompleteResult;
 import com.maxpallu.go4lunch.models.PlaceAutocompleteResponse;
 import com.maxpallu.go4lunch.models.PlaceDetailsResponse;
+import com.maxpallu.go4lunch.models.Predictions;
 import com.maxpallu.go4lunch.models.Restaurants;
 
 import retrofit2.Call;
@@ -17,8 +18,8 @@ public interface RestaurantService {
     Call<Restaurants> getRestaurants();
     @GET("maps/api/place/details/json?fields=name,rating,formatted_phone_number,icon,website,place_id,opening_hours&key=AIzaSyAcRMUsc5zeKZG5sxZz7-dk-CeT7PtudKA")
     Call<PlaceDetailsResponse> getDetails(@Query("place_id") String placeId);
-    @GET("maps/api/place/autocomplete/json?&key=AIzaSyAcRMUsc5zeKZG5sxZz7-dk-CeT7PtudKA")
-    Call<AutocompleteResult> getAutocomplete(@Query("input") String input);
+    @GET("maps/api/place/autocomplete/json?&key=AIzaSyAcRMUsc5zeKZG5sxZz7-dk-CeT7PtudKA&location=48.8707,2.3045&radius=100")
+    Call<Predictions> getAutocomplete(@Query("input") String input);
 
     public static final Retrofit retrofit = new Retrofit.Builder()
                                                 .baseUrl("https://maps.googleapis.com")

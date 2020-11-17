@@ -9,6 +9,8 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +34,16 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.maxpallu.go4lunch.models.AutocompleteResult;
+import com.maxpallu.go4lunch.models.PlaceAutocompleteResponse;
+import com.maxpallu.go4lunch.models.PlaceDetailsResponse;
+import com.maxpallu.go4lunch.models.Predictions;
+import com.maxpallu.go4lunch.models.Restaurants;
+import com.maxpallu.go4lunch.util.ApiCalls;
 import com.maxpallu.go4lunch.util.PermissionUtils;
 import com.maxpallu.go4lunch.views.MyAdapter;
 
@@ -40,7 +51,7 @@ import java.io.IOException;
 import java.util.List;
 
 
-public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener, OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
+public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener, OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback, ApiCalls.Callbacks {
 
     private SupportMapFragment mMapFragment;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
@@ -48,6 +59,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
     private GoogleMap mMap;
     private SearchView searchView;
     private FusedLocationProviderClient mFusedLocationProviderClient;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     public MapFragment() {
 
@@ -56,54 +68,43 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_map, container, false);
+    }
+
+    private void executeHttpRequestWithRetrofit() {
+        ApiCalls.fetchRestaurant(this);
     }
 
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
+        this.executeHttpRequestWithRetrofit();
         mMapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map);
         mMapFragment.getMapAsync(this);
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.searchView:
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.menu, menu);
+        MenuItem item = menu.findItem(R.id.searchView);
+        SearchView searchView = (SearchView) item.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                executeRetrofit(query);
+                return true;
+            }
 
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
-                        String location = searchView.getQuery().toString();
-                        List<Address> addressList = null;
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+    }
 
-                        if(location != null || !location.equals("")) {
-                            Geocoder geocoder = new Geocoder(MapFragment.this.getContext());
-                            try {
-                                addressList = geocoder.getFromLocationName(location, 3);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            Address address = addressList.get(0);
-                            LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                            mMap.addMarker(new MarkerOptions().position(latLng).title(location));
-                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-                        }
-
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-                        return false;
-                    }
-                });
-
-                mMapFragment.getMapAsync(this);
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+    private void executeRetrofit(String input){
+        ApiCalls.fetchAutocomplete(this, input);
     }
 
     @Override
@@ -195,5 +196,26 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
             // Display the missing permission error dialog when the fragments resume.
             permissionDenied = true;
         }
+    }
+
+    @Override
+    public void onDetailsResponse(PlaceDetailsResponse placeDetailsResponse) {
+
+    }
+
+    @Override
+    public void onResponse(@Nullable Restaurants restaurants) {
+
+    }
+
+    @Override
+    public void onAutocompleteResponse(Predictions placeAutocompleteResponse) {
+
+    }
+
+
+    @Override
+    public void onFailure() {
+
     }
 }

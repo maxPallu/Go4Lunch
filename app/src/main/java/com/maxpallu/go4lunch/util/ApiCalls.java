@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import com.maxpallu.go4lunch.models.AutocompleteResult;
 import com.maxpallu.go4lunch.models.PlaceAutocompleteResponse;
 import com.maxpallu.go4lunch.models.PlaceDetailsResponse;
+import com.maxpallu.go4lunch.models.Predictions;
 import com.maxpallu.go4lunch.models.Restaurants;
 
 import java.lang.ref.WeakReference;
@@ -18,7 +19,7 @@ public class ApiCalls {
     public interface Callbacks {
         void onDetailsResponse(PlaceDetailsResponse placeDetailsResponse);
         void onResponse(@Nullable Restaurants restaurants);
-        void onAutocompleteResponse(AutocompleteResult placeAutocompleteResponse);
+        void onAutocompleteResponse(Predictions placeAutocompleteResponse);
         void onFailure();
     }
 
@@ -65,17 +66,17 @@ public class ApiCalls {
 
         RestaurantService restaurantService = RestaurantService.retrofit.create(RestaurantService.class);
 
-        Call<AutocompleteResult> call = restaurantService.getAutocomplete(input);
+        Call<Predictions> call = restaurantService.getAutocomplete(input);
 
-        call.enqueue(new Callback<AutocompleteResult>() {
+        call.enqueue(new Callback<Predictions>() {
             @Override
-            public void onResponse(Call<AutocompleteResult> call, Response<AutocompleteResult> response) {
+            public void onResponse(Call<Predictions> call, Response<Predictions> response) {
                 callbacksWeakReference.get().onAutocompleteResponse(response.body());
             }
 
             @Override
-            public void onFailure(Call<AutocompleteResult> call, Throwable t) {
-                if(callbacksWeakReference.get() != null) callbacksWeakReference.get().onFailure();
+            public void onFailure(Call<Predictions> call, Throwable t) {
+                callbacksWeakReference.get().onFailure();
             }
         });
     }
