@@ -6,49 +6,32 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
-import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.inputmethod.EditorInfo;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.google.android.gms.maps.model.LatLng;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.model.RectangularBounds;
-import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.widget.Autocomplete;
-import com.google.android.libraries.places.widget.AutocompleteActivity;
-import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.maxpallu.go4lunch.api.Restaurant;
-import com.maxpallu.go4lunch.models.AutocompleteResult;
-import com.maxpallu.go4lunch.models.PlaceAutocompleteResponse;
+import com.maxpallu.go4lunch.api.UserHelper;
+import com.maxpallu.go4lunch.models.PlaceAutocomplete;
 import com.maxpallu.go4lunch.models.PlaceDetailsResponse;
-import com.maxpallu.go4lunch.models.Predictions;
+import com.maxpallu.go4lunch.models.PredictionsItem;
 import com.maxpallu.go4lunch.models.Restaurants;
 import com.maxpallu.go4lunch.util.ApiCalls;
-import com.maxpallu.go4lunch.util.RestaurantService;
 import com.maxpallu.go4lunch.views.MyAdapter;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ApiCalls.Callbacks {
     private DrawerLayout drawer;
@@ -56,6 +39,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int AUTOCOMPLETE_REQUEST_CODE = 1;
     private MyAdapter mAdapter;
     private RecyclerView recyclerView;
+    private TextView profileName;
+    private TextView profileEmail;
+    private ImageView profileAvatar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +58,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+        View headerLayout = navigationView.getHeaderView(0);
+        profileName = headerLayout.findViewById(R.id.profile_name);
+        profileEmail = headerLayout.findViewById(R.id.profile_email);
+        profileAvatar = headerLayout.findViewById(R.id.profile_avatar);
+
+        profileName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+        profileEmail.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        Glide.with(this.getApplicationContext()).load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl()).apply(RequestOptions.centerCropTransform()).into(profileAvatar);
+
         navigationView.setNavigationItemSelectedListener(this);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
@@ -165,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onAutocompleteResponse(Predictions placeAutocompleteResponse) {
+    public void onAutocompleteResponse(PlaceAutocomplete placeAutocompleteResponse) {
 
     }
 

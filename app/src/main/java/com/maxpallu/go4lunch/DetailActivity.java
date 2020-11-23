@@ -1,6 +1,7 @@
 package com.maxpallu.go4lunch;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,6 +18,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -68,6 +70,7 @@ public class DetailActivity extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private AlarmManager alarmMgr;
     private PendingIntent alarmIntent;
+    private SwitchCompat notifications;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +127,17 @@ public class DetailActivity extends AppCompatActivity {
                 FirebaseFirestore.getInstance().collection("user").document(userId).update("restaurantPhone", restaurantPhone);
                 FirebaseFirestore.getInstance().collection("user").document(userId).update("restaurantWeb", restaurantWeb);
                 goRestaurant.setBackgroundTintList(getResources().getColorStateList(R.color.restaurant));
-                createNotification();
+
+                notifications = findViewById(R.id.notif_switch);
+
+                notifications.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked) {
+                            createNotification();
+                        }
+                    }
+                });
             }
         });
 

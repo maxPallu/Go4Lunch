@@ -3,15 +3,10 @@ package com.maxpallu.go4lunch.views;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.gesture.Prediction;
 import android.location.Location;
-import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,26 +16,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.maxpallu.go4lunch.DetailActivity;
-import com.maxpallu.go4lunch.ListFragment;
-import com.maxpallu.go4lunch.MapFragment;
 import com.maxpallu.go4lunch.R;
-import com.maxpallu.go4lunch.WorkmateRecyclerViewAdapter;
-import com.maxpallu.go4lunch.WorkmatesFragment;
 import com.maxpallu.go4lunch.api.Restaurant;
 import com.maxpallu.go4lunch.api.RestaurantHelper;
 import com.maxpallu.go4lunch.di.DI;
-import com.maxpallu.go4lunch.models.AutocompleteResult;
 import com.maxpallu.go4lunch.models.DetailsResult;
-import com.maxpallu.go4lunch.models.PlaceAutocompleteResponse;
-import com.maxpallu.go4lunch.models.PlaceDetailsResponse;
-import com.maxpallu.go4lunch.models.Predictions;
+import com.maxpallu.go4lunch.models.PlaceAutocomplete;
+import com.maxpallu.go4lunch.models.PredictionsItem;
 import com.maxpallu.go4lunch.models.Restaurants;
 import com.maxpallu.go4lunch.models.Result;
 import com.maxpallu.go4lunch.models.Workmate;
-import com.maxpallu.go4lunch.util.ApiCalls;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,9 +37,8 @@ import java.util.List;
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     private List<Result> mResults = new ArrayList<Result>();
-    private List<Result> mResultsFull;
     private List<DetailsResult> mDetails = new ArrayList<>();
-    private List<Predictions> mAutocomplete = new ArrayList<>();
+    private List<PredictionsItem> mAutocomplete = new ArrayList<>();
     private Context context;
     private LatLng userLatLng;
 
@@ -78,7 +66,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     public MyAdapter(Restaurants restaurants) {
-        mResultsFull = new ArrayList<>(mResults);
+
     }
 
 
@@ -98,8 +86,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
-    public void updateWithAutocomple(Predictions results) {
-        mAutocomplete.add(results);
+    public void updateWithAutocomple(List<PredictionsItem> results) {
+        mAutocomplete.clear();
+        mAutocomplete.addAll(results);
         notifyDataSetChanged();
     }
 
@@ -111,6 +100,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public void updateLatLng(double lat, double lng) {
         userLatLng = new LatLng(lat, lng);
         notifyDataSetChanged();
+    }
+
+    private void getRestaurants() {
+        for(int i =0; i<mAutocomplete.size(); i++) {
+            String id = mAutocomplete.get(i).getPlaceId();
+
+        }
     }
 
 

@@ -46,5 +46,6 @@
     <string name="notif_choice">"You're eating at "</string>
     <string name="notif_with">" with "</string>
     <string name="connected">Already logged in</string>
+    <string name="enable_notifications">Enable notifications :</string>
 
 </resources>

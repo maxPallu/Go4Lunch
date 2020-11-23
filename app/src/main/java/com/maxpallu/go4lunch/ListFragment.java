@@ -1,13 +1,8 @@
  package com.maxpallu.go4lunch;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.gesture.Prediction;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,36 +13,27 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.maxpallu.go4lunch.models.AutocompleteResult;
-import com.maxpallu.go4lunch.models.DetailsResult;
-import com.maxpallu.go4lunch.models.PlaceAutocompleteResponse;
+import com.google.firebase.auth.FirebaseAuth;
+import com.maxpallu.go4lunch.models.PlaceAutocomplete;
 import com.maxpallu.go4lunch.models.PlaceDetailsResponse;
-import com.maxpallu.go4lunch.models.Predictions;
+import com.maxpallu.go4lunch.models.PredictionsItem;
 import com.maxpallu.go4lunch.models.Restaurants;
-import com.maxpallu.go4lunch.models.Result;
 import com.maxpallu.go4lunch.util.ApiCalls;
-import com.maxpallu.go4lunch.util.RestaurantService;
 import com.maxpallu.go4lunch.views.MyAdapter;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
 
-
-public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners, ApiCalls.Callbacks, Serializable {
+ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners, ApiCalls.Callbacks, Serializable {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -56,7 +42,7 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
     private MyAdapter mAdapter = new MyAdapter(mRestaurants);
     private Context context;
     private Boolean permissionDenied = false;
-    private Predictions mResults;
+    private PlaceAutocomplete mResults;
 
     public ListFragment newInstance() {
         ListFragment fragment = new ListFragment();
@@ -109,6 +95,7 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
 
             @Override
             public boolean onQueryTextChange(String newText) {
+
                 return false;
             }
         });
@@ -127,8 +114,8 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
         mAdapter.updateDetails(response.getResult());
     }
 
-    private void updateUIWithAutocomplete(Predictions result) {
-        mAdapter.updateWithAutocomple(result);
+    private void updateUIWithAutocomplete(PlaceAutocomplete result) {
+        mAdapter.updateWithAutocomple(result.getPredictions());
     }
 
     private void updateLocation(double lat, double lng) {
@@ -174,8 +161,6 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
 
     }
 
-
-
     @Override
     public void onDetailsResponse(PlaceDetailsResponse placeDetailsResponse) {
         if(placeDetailsResponse != null) {
@@ -192,14 +177,14 @@ public class ListFragment extends Fragment implements NetworkAsyncTask.Listeners
         }
     }
 
-    @Override
-    public void onAutocompleteResponse(Predictions placeAutocompleteResponse) {
-        mResults = placeAutocompleteResponse;
-        this.updateUIWithAutocomplete(mResults);
-    }
+     @Override
+     public void onAutocompleteResponse(PlaceAutocomplete placeAutocompleteResponse) {
+         mResults = placeAutocompleteResponse;
+         this.updateUIWithAutocomplete(mResults);
+     }
 
 
-    @Override
+     @Override
     public void onFailure() {
 
     }

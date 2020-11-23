@@ -1,13 +1,9 @@
 package com.maxpallu.go4lunch;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,23 +28,15 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.maxpallu.go4lunch.models.AutocompleteResult;
-import com.maxpallu.go4lunch.models.PlaceAutocompleteResponse;
+import com.maxpallu.go4lunch.models.PlaceAutocomplete;
 import com.maxpallu.go4lunch.models.PlaceDetailsResponse;
-import com.maxpallu.go4lunch.models.Predictions;
+import com.maxpallu.go4lunch.models.PredictionsItem;
 import com.maxpallu.go4lunch.models.Restaurants;
 import com.maxpallu.go4lunch.util.ApiCalls;
 import com.maxpallu.go4lunch.util.PermissionUtils;
-import com.maxpallu.go4lunch.views.MyAdapter;
-
-import java.io.IOException;
-import java.util.List;
 
 
 public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener, OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback, ApiCalls.Callbacks {
@@ -209,7 +197,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
     }
 
     @Override
-    public void onAutocompleteResponse(Predictions placeAutocompleteResponse) {
+    public void onAutocompleteResponse(PlaceAutocomplete placeAutocompleteResponse) {
 
     }
 

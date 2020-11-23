@@ -4,29 +4,33 @@
     android:layout_height="176dp"
     android:background="@drawable/menu_background"
     android:gravity="bottom"
-    android:orientation="vertical"
-    android:padding="16dp"
+    android:orientation="horizontal"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
         android:id="@+id/profile_avatar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="5dp"/>
 
     <TextView
         android:id="@+id/profile_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="8dp"
-        android:text="Test"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:layout_marginLeft="8dp"/>
 
     <TextView
         android:id="@+id/profile_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="test@email.fr" />
+        android:paddingTop="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textStyle="bold"
+        android:textSize="10dp"/>
 
 
 </LinearLayout>

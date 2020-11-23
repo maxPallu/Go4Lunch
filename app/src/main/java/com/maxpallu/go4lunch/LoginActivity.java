@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -56,7 +58,6 @@ public class LoginActivity extends BaseActivity {
     private Button google;
     private Button email;
     private Button twitter;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
