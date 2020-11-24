@@ -29,6 +29,8 @@ import com.maxpallu.go4lunch.models.PredictionsItem;
 import com.maxpallu.go4lunch.models.Restaurants;
 import com.maxpallu.go4lunch.models.Result;
 import com.maxpallu.go4lunch.models.Workmate;
+import com.maxpallu.go4lunch.util.ApiCalls;
+import com.maxpallu.go4lunch.util.RestaurantService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +40,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     private List<Result> mResults = new ArrayList<Result>();
     private List<DetailsResult> mDetails = new ArrayList<>();
+    private List<DetailsResult> mAutoDetails = new ArrayList<>();
     private List<PredictionsItem> mAutocomplete = new ArrayList<>();
     private Context context;
     private LatLng userLatLng;
@@ -65,7 +68,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         }
     }
 
-    public MyAdapter(Restaurants restaurants) {
+    public MyAdapter() {
 
     }
 
@@ -102,10 +105,22 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
-    private void getRestaurants() {
-        for(int i =0; i<mAutocomplete.size(); i++) {
-            String id = mAutocomplete.get(i).getPlaceId();
+    public void getRestaurants(List<PredictionsItem> autocomplte) {
+        for(int i =0; i<autocomplte.size(); i++) {
+            for(DetailsResult result: mDetails) { if(result.getPlaceId().equals(autocomplte.get(i).getPlaceId())) {
+                    mAutoDetails.add(result);
+                    notifyDataSetChanged();
+                    for(int j = 0; j<mAutoDetails.size(); j++) {
+                        Result mResult = new Result();
+                        mResult.setId(mAutoDetails.get(j).getPlaceId());
+                        mResult.setName(mAutoDetails.get(j).getName());
+                        mResults.clear();
+                        mResults.add(mResult);
+                        notifyDataSetChanged();
+                    }
 
+                }
+            }
         }
     }
 

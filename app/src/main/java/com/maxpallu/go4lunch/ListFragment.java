@@ -39,7 +39,7 @@ import java.util.List;
     private RecyclerView.LayoutManager mLayoutManager;
     private Restaurants mRestaurants = new Restaurants();
     private PlaceDetailsResponse mDetails = new PlaceDetailsResponse();
-    private MyAdapter mAdapter = new MyAdapter(mRestaurants);
+    private MyAdapter mAdapter = new MyAdapter();
     private Context context;
     private Boolean permissionDenied = false;
     private PlaceAutocomplete mResults;
@@ -116,6 +116,7 @@ import java.util.List;
 
     private void updateUIWithAutocomplete(PlaceAutocomplete result) {
         mAdapter.updateWithAutocomple(result.getPredictions());
+        mAdapter.getRestaurants(result.getPredictions());
     }
 
     private void updateLocation(double lat, double lng) {
