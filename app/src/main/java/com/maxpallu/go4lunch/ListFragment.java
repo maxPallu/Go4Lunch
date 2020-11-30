@@ -89,13 +89,17 @@ import java.util.List;
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                executeRetrofit(query);
+                if(query != null) {
+                    executeRetrofit(query);
+                }
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
+               // if(newText != null) {
+               //     executeRetrofit(newText);
+               // }
                 return false;
             }
         });

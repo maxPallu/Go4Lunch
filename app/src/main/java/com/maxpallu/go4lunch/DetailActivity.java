@@ -70,8 +70,8 @@ public class DetailActivity extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private AlarmManager alarmMgr;
     private PendingIntent alarmIntent;
-    private SwitchCompat notifications;
     private NotificationManager notificationManager;
+    private Boolean createNotification = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,18 +129,9 @@ public class DetailActivity extends AppCompatActivity {
                 FirebaseFirestore.getInstance().collection("user").document(userId).update("restaurantWeb", restaurantWeb);
                 goRestaurant.setBackgroundTintList(getResources().getColorStateList(R.color.restaurant));
 
-                notifications = findViewById(R.id.notif_switch);
-
-                notifications.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if(isChecked) {
-                            createNotification();
-                        } else {
-                            notificationManager.cancelAll();
-                        }
-                    }
-                });
+                Bundle bundle = getIntent().getExtras();
+                createNotification = bundle.getBoolean("Checked");
+                createNotification();
             }
         });
 
@@ -194,19 +185,26 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void createNotification() {
-        createNotificationChannel();
 
         Intent intent = new Intent(this.getApplicationContext(), ReminderBroadcast.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, intent, 0);
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 12);
-        calendar.set(Calendar.MINUTE, 0);
+        if(createNotification == true) {
+            createNotificationChannel();
 
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(System.currentTimeMillis());
+            calendar.set(Calendar.HOUR_OF_DAY, 12);
+            calendar.set(Calendar.MINUTE, 0);
+
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+        } else {
+            pendingIntent.cancel();
+        }
+
     }
 
     private void createNotificationChannel() {

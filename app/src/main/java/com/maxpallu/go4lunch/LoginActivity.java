@@ -65,6 +65,7 @@ public class LoginActivity extends BaseActivity {
         alreadyConnected = findViewById(R.id.button_already_connected);
         twitter = findViewById(R.id.twitterLogin);
         email = findViewById(R.id.emailSignIn);
+        resumeUI();
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -144,6 +145,7 @@ public class LoginActivity extends BaseActivity {
     private void resumeUI() {
         if(this.isCurrentUserLogged()) {
             alreadyConnected.setVisibility(View.VISIBLE);
+            twitter.setText("Logged in");
         } else {
             alreadyConnected.setVisibility(View.GONE);
         }

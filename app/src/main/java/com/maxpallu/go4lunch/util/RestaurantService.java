@@ -15,7 +15,7 @@ public interface RestaurantService {
 
     @GET("maps/api/place/nearbysearch/json?location=48.8707,2.3045&radius=1000&type=restaurant&key=AIzaSyAcRMUsc5zeKZG5sxZz7-dk-CeT7PtudKA")
     Call<Restaurants> getRestaurants();
-    @GET("maps/api/place/details/json?fields=name,rating,formatted_phone_number,icon,website,place_id,opening_hours&key=AIzaSyAcRMUsc5zeKZG5sxZz7-dk-CeT7PtudKA")
+    @GET("maps/api/place/details/json?fields=name,rating,formatted_phone_number,icon,website,place_id,opening_hours,photos,geometry,vicinity&key=AIzaSyAcRMUsc5zeKZG5sxZz7-dk-CeT7PtudKA")
     Call<PlaceDetailsResponse> getDetails(@Query("place_id") String placeId);
     @GET("maps/api/place/autocomplete/json?&key=AIzaSyAcRMUsc5zeKZG5sxZz7-dk-CeT7PtudKA&location=48.8707,2.3045&radius=100")
     Call<PlaceAutocomplete> getAutocomplete(@Query("input") String input);

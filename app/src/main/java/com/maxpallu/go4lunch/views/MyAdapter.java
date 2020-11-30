@@ -89,6 +89,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
+    private void updateResultsWithAutocomplete(List<Result> results) {
+        mResults.addAll(results);
+        notifyDataSetChanged();
+    }
+
     public void updateWithAutocomple(List<PredictionsItem> results) {
         mAutocomplete.clear();
         mAutocomplete.addAll(results);
@@ -111,12 +116,18 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                     mAutoDetails.add(result);
                     notifyDataSetChanged();
                     for(int j = 0; j<mAutoDetails.size(); j++) {
-                        Result mResult = new Result();
-                        mResult.setId(mAutoDetails.get(j).getPlaceId());
-                        mResult.setName(mAutoDetails.get(j).getName());
-                        mResults.clear();
-                        mResults.add(mResult);
-                        notifyDataSetChanged();
+                        if(result != null) {
+                            Result mResult = new Result();
+                            mResult.setId(mAutoDetails.get(j).getPlaceId());
+                            mResult.setName(mAutoDetails.get(j).getName());
+                            mResult.setVicinity(mAutoDetails.get(j).getVicinity());
+                            mResult.setGeometry(mAutoDetails.get(j).getGeometry());
+                            mResult.setPhotos(mAutoDetails.get(j).getPhotos());
+                            mResults.clear();
+                            mResults.add(mResult);
+                            updateResultsWithAutocomplete(mResults);
+                            notifyDataSetChanged();
+                        }
                     }
 
                 }
