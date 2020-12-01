@@ -91,15 +91,17 @@ import java.util.List;
             public boolean onQueryTextSubmit(String query) {
                 if(query != null) {
                     executeRetrofit(query);
+                } else {
+
                 }
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-               // if(newText != null) {
-               //     executeRetrofit(newText);
-               // }
+               if(newText != null) {
+                   executeRetrofit(newText);
+               }
                 return false;
             }
         });

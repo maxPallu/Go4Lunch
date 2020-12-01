@@ -1,6 +1,7 @@
 package com.maxpallu.go4lunch;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -27,16 +28,28 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.maxpallu.go4lunch.di.DI;
+import com.maxpallu.go4lunch.models.DetailsResult;
 import com.maxpallu.go4lunch.models.PlaceAutocomplete;
 import com.maxpallu.go4lunch.models.PlaceDetailsResponse;
 import com.maxpallu.go4lunch.models.PredictionsItem;
 import com.maxpallu.go4lunch.models.Restaurants;
+import com.maxpallu.go4lunch.models.Result;
+import com.maxpallu.go4lunch.models.Workmate;
 import com.maxpallu.go4lunch.util.ApiCalls;
 import com.maxpallu.go4lunch.util.PermissionUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener, OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback, ApiCalls.Callbacks {
@@ -45,9 +58,11 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private boolean permissionDenied = false;
     private GoogleMap mMap;
+    private Marker mMarker;
     private SearchView searchView;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    List<DetailsResult> mRestaurants = new ArrayList<>();
 
     public MapFragment() {
 
@@ -63,6 +78,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
     private void executeHttpRequestWithRetrofit() {
         ApiCalls.fetchRestaurant(this);
     }
+
 
     @Override
     public void onActivityCreated(Bundle bundle) {
@@ -111,7 +127,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
         Toast.makeText(this.getContext(), "Current location:\n" + location, Toast.LENGTH_LONG).show();
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 16);
         mMap.moveCamera(cameraUpdate);
     }
 
@@ -127,7 +143,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
                         if(task.isSuccessful()) {
                             Location currentLocation = (Location) task.getResult();
 
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 17));
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 16));
                         }
                     }
                 });
@@ -148,7 +164,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
             @Override
             public boolean onMyLocationButtonClick() {
                 LatLng latLng = new LatLng(mMap.getMyLocation().getLatitude(), mMap.getMyLocation().getLongitude());
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 16);
                 mMap.moveCamera(cameraUpdate);
                 return false;
             }
@@ -188,7 +204,67 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
 
     @Override
     public void onDetailsResponse(PlaceDetailsResponse placeDetailsResponse) {
+        mRestaurants.add(placeDetailsResponse.getResult());
+        String restaurantName;
+        String restaurantId;
 
+        for(int i = 0; i<mRestaurants.size(); i++) {
+            restaurantName = mRestaurants.get(i).getName();
+            restaurantId = mRestaurants.get(i).getPlaceId();
+            double restaurantLat = mRestaurants.get(i).getGeometry().getLocation().getLat();
+            double restaurantLng = mRestaurants.get(i).getGeometry().getLocation().getLng();
+
+            LatLng restaurantLatLng = new LatLng(restaurantLat, restaurantLng);
+            updateColor(restaurantId, restaurantName, restaurantLatLng);
+
+            String name = restaurantName;
+            String adress = mRestaurants.get(i).getVicinity();
+            String phone = mRestaurants.get(i).getFormattedPhoneNumber();
+            String web = mRestaurants.get(i).getWebsite();
+
+            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                @Override
+                public void onInfoWindowClick(Marker marker) {
+                    Intent intent = new Intent(getActivity(), DetailActivity.class);
+                    intent.putExtra("restaurantName", name);
+                    intent.putExtra("restaurantAdress", adress);
+                    intent.putExtra("restaurantPhone", phone);
+                    intent.putExtra("restaurantWeb", web);
+
+                    startActivity(intent);
+                }
+            });
+        }
+    }
+
+    private void updateColor(String id, String name, LatLng latLng) {
+        MarkerOptions markerOptions = new MarkerOptions();
+
+        markerOptions.position(latLng)
+                    .title(name)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+
+        mMarker = mMap.addMarker(markerOptions);
+        mMarker.setTag(id);
+
+        List<Workmate> mWorkmates = DI.getService().getWorkmates();
+
+        for(int i =0; i<mWorkmates.size(); i++) {
+            if(mWorkmates.get(i).getRestaurantName() != null) {
+                if(mWorkmates.get(i).getRestaurantName().equals(name)) {
+                    markerOptions.position(latLng)
+                            .title(name)
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                } else {
+                    markerOptions.position(latLng)
+                            .title(name)
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+
+                }
+                mMarker = mMap.addMarker(markerOptions);
+                mMarker.setTag(id);
+            }
+        }
     }
 
     @Override

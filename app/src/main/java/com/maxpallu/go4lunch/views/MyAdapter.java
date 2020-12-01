@@ -89,8 +89,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
-    private void updateResultsWithAutocomplete(List<Result> results) {
-        mResults.addAll(results);
+    private void updateResultsWithAutocomplete(Result results) {
+        mResults.clear();
+        mResults.add(results);
         notifyDataSetChanged();
     }
 
@@ -118,14 +119,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                     for(int j = 0; j<mAutoDetails.size(); j++) {
                         if(result != null) {
                             Result mResult = new Result();
+                            mResult.setPlaceId(mAutoDetails.get(j).getPlaceId());
                             mResult.setId(mAutoDetails.get(j).getPlaceId());
                             mResult.setName(mAutoDetails.get(j).getName());
                             mResult.setVicinity(mAutoDetails.get(j).getVicinity());
                             mResult.setGeometry(mAutoDetails.get(j).getGeometry());
                             mResult.setPhotos(mAutoDetails.get(j).getPhotos());
-                            mResults.clear();
-                            mResults.add(mResult);
-                            updateResultsWithAutocomplete(mResults);
+                            updateResultsWithAutocomplete(mResult);
                             notifyDataSetChanged();
                         }
                     }
