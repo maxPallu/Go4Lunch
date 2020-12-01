@@ -274,7 +274,34 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
 
     @Override
     public void onAutocompleteResponse(PlaceAutocomplete placeAutocompleteResponse) {
+        List<PredictionsItem> mResults = placeAutocompleteResponse.getPredictions();
+        for(int i=0; i<mResults.size(); i++) {
+            for(DetailsResult result: mRestaurants) {
+                if(result.getPlaceId().equals(mResults.get(i).getPlaceId())) {
+                    List<DetailsResult> mDetails = new ArrayList<>();
+                    mDetails.add(result);
+                    for(int j=0; j<mDetails.size(); j++) {
+                        if(result != null) {
+                            double lat = mDetails.get(j).getGeometry().getLocation().getLat();
+                            double lng = mDetails.get(j).getGeometry().getLocation().getLng();
+                            LatLng latLng = new LatLng(lat, lng);
 
+                            MarkerOptions markerOptions = new MarkerOptions();
+
+                            markerOptions.position(latLng)
+                                    .title(mDetails.get(j).getName())
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+
+                            mMap.clear();
+                            mMarker = mMap.addMarker(markerOptions);
+                            mMarker.setTag(mDetails.get(j).getPlaceId());
+                            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 16);
+                            mMap.moveCamera(cameraUpdate);
+                        }
+                    }
+                }
+            }
+        }
     }
 
 
