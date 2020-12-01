@@ -8,7 +8,8 @@
     android:fadeScrollbars="true"
     android:fitsSystemWindows="true"
     android:isScrollContainer="true"
-    tools:context=".DetailActivity">
+    tools:context=".DetailActivity"
+    tools:visibility="visible">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -123,10 +124,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="175dp"
                 android:layout_marginTop="-90dp"
-                android:backgroundTint="@android:color/white"
+                android:backgroundTint="@color/white"
                 android:src="@drawable/ic_baseline_star_24"
                 android:tint="@color/colorPrimary"
-                app:backgroundTint="@drawable/like_background"/>
+                app:background="@drawable/like_background" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -160,12 +161,12 @@
             <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
                 android:id="@+id/list_client"
                 android:name="com.maxpallu.go4lunch.WorkmatesFragment"
-                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="18dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginRight="16dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 

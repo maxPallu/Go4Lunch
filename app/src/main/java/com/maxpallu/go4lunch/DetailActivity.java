@@ -138,7 +138,7 @@ public class DetailActivity extends AppCompatActivity {
         like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                like.setBackgroundTintList(getResources().getColorStateList(R.color.like));
+                like.setBackgroundDrawable(getResources().getDrawable(R.drawable.like_background));
             }
         });
 

@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -86,27 +87,36 @@ import java.util.List;
         inflater.inflate(R.menu.menu, menu);
         MenuItem item = menu.findItem(R.id.searchView);
         SearchView searchView = (SearchView) item.getActionView();
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 if(query != null) {
                     executeRetrofit(query);
-                } else {
-
                 }
-                return true;
+                return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-               if(newText != null) {
-                   executeRetrofit(newText);
-               }
+                if(newText != null) {
+                    executeRetrofit(newText);
+                }
+                return false;
+            }
+        });
+
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                executeHttpRequestWithRetrofit();
                 return false;
             }
         });
 
     }
+
+
 
     private void executeRetrofit(String input){
         ApiCalls.fetchAutocomplete(this, input);

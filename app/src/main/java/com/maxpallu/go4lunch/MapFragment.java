@@ -106,6 +106,14 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
                 return true;
             }
         });
+
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                executeHttpRequestWithRetrofit();
+                return false;
+            }
+        });
     }
 
     private void executeRetrofit(String input){
@@ -119,13 +127,11 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
 
     @Override
     public boolean onMyLocationButtonClick() {
-        Toast.makeText(this.getContext(), "MyLocation button clicked", Toast.LENGTH_SHORT).show();
         return false;
     }
 
     @Override
     public void onMyLocationClick(@NonNull Location location) {
-        Toast.makeText(this.getContext(), "Current location:\n" + location, Toast.LENGTH_LONG).show();
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 16);
