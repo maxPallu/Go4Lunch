@@ -102,7 +102,8 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                return false;
+                executeRetrofit(newText);
+                return true;
             }
         });
     }
