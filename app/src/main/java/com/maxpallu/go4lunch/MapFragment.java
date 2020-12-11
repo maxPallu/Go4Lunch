@@ -272,7 +272,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
                 mMarker.setTag(id);
             }
         }
-    }
+        }
 
     @Override
     public void onResponse(@Nullable Restaurants restaurants) {
