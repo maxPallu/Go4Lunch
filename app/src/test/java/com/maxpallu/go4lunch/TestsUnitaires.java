@@ -1,15 +1,22 @@
 package com.maxpallu.go4lunch;
 
 import com.maxpallu.go4lunch.api.User;
+import com.maxpallu.go4lunch.models.DetailsResult;
+import com.maxpallu.go4lunch.util.GetRestaurantsDetails;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
 public class TestsUnitaires {
 
     private User user;
+    GetRestaurantsDetails mDetails = new GetRestaurantsDetails();
+    private DetailsResult detailsResult = new DetailsResult();
 
     @Before
     public void userCreation() {
@@ -41,5 +48,22 @@ public class TestsUnitaires {
         assertEquals(null, user.getUrlPicture());
         assertEquals("Test", user.getRestaurantName());
         assertEquals("4321", user.getRestaurantId());
+    }
+
+    @Before
+    public void setDetailsResults() {
+        detailsResult.setName("Test");
+        detailsResult.setPlaceId("1");
+    }
+
+    @Test
+    public void testRestaurantsDetails() {
+        List<DetailsResult> mResults = new ArrayList<>();
+        mResults.add(detailsResult);
+        String id = "1";
+
+        DetailsResult mRestaurant = mDetails.getRestaurants(mResults, id);
+
+        assertEquals(mRestaurant.getName(), mResults.get(0).getName());
     }
 }

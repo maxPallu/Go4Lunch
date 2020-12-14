@@ -42,6 +42,7 @@ import com.maxpallu.go4lunch.models.PredictionsItem;
 import com.maxpallu.go4lunch.models.Restaurants;
 import com.maxpallu.go4lunch.models.Workmate;
 import com.maxpallu.go4lunch.util.ApiCalls;
+import com.maxpallu.go4lunch.util.GetRestaurantsDetails;
 import com.maxpallu.go4lunch.util.PermissionUtils;
 
 import java.util.ArrayList;
@@ -57,6 +58,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
     private Marker mMarker;
     private SearchView searchView;
     private FusedLocationProviderClient mFusedLocationProviderClient;
+    private GetRestaurantsDetails mDetails = new GetRestaurantsDetails();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     List<DetailsResult> mRestaurants = new ArrayList<>();
 
@@ -225,7 +227,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
                 public void onInfoWindowClick(Marker marker) {
 
                     String id = (String) marker.getTag();
-                    DetailsResult mResults = getRestaurantsDetails(id);
+                    DetailsResult mResults = mDetails.getRestaurants(mRestaurants, id);
                         Intent intent = new Intent(getActivity(), DetailActivity.class);
                         intent.putExtra("restaurantName", mResults.getName());
                         intent.putExtra("restaurantAdress", mResults.getVicinity());
@@ -237,15 +239,6 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
                     }
             });
         }
-    }
-
-    private DetailsResult getRestaurantsDetails(String id) {
-        for(int i =0; i<mRestaurants.size(); i++) {
-            if(mRestaurants.get(i).getPlaceId().equals(id)) {
-                return mRestaurants.get(i);
-            }
-        }
-        return null;
     }
 
     private void updateColor(String id, String name, LatLng latLng) {
