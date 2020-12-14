@@ -138,7 +138,8 @@ public class DetailActivity extends AppCompatActivity {
         like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                like.setBackgroundDrawable(getResources().getDrawable(R.drawable.like_background));
+                FirebaseFirestore.getInstance().collection("user").document(userId).update("like", true);
+                like.setSupportImageTintList(getResources().getColorStateList(R.color.like));
             }
         });
 

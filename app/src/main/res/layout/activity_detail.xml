@@ -124,10 +124,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="175dp"
                 android:layout_marginTop="-90dp"
-                android:backgroundTint="@color/white"
-                android:src="@drawable/ic_baseline_star_24"
-                android:tint="@color/colorPrimary"
-                app:background="@drawable/like_background" />
+                android:backgroundTint="@drawable/like_background"
+                android:src="@drawable/ic_baseline_star_24" />
 
             <TextView
                 android:layout_width="wrap_content"

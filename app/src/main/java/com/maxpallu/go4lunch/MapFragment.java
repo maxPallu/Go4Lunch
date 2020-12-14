@@ -231,6 +231,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
                         intent.putExtra("restaurantAdress", mResults.getVicinity());
                         intent.putExtra("restaurantPhone", mResults.getFormattedPhoneNumber());
                         intent.putExtra("restaurantWeb", mResults.getWebsite());
+                        intent.putExtra("restaurantPicture", "https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&maxheight=800&photoreference=" + mResults.getPhotos().get(0).getPhotoReference() + "&key=AIzaSyAcRMUsc5zeKZG5sxZz7-dk-CeT7PtudKA");
 
                         startActivity(intent);
                     }
@@ -261,7 +262,7 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
 
         for(int i =0; i<mWorkmates.size(); i++) {
             if(mWorkmates.get(i).getRestaurantName() != null) {
-                if(mWorkmates.get(i).getRestaurantName().equals(name)) {
+                if(mWorkmates.get(i).getRestaurantId().equals(id)) {
                     markerOptions.position(latLng)
                             .title(name)
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
