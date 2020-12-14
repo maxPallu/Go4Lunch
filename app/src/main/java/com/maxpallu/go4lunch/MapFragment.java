@@ -11,7 +11,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,9 +32,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.maxpallu.go4lunch.di.DI;
 import com.maxpallu.go4lunch.models.DetailsResult;
@@ -43,7 +40,6 @@ import com.maxpallu.go4lunch.models.PlaceAutocomplete;
 import com.maxpallu.go4lunch.models.PlaceDetailsResponse;
 import com.maxpallu.go4lunch.models.PredictionsItem;
 import com.maxpallu.go4lunch.models.Restaurants;
-import com.maxpallu.go4lunch.models.Result;
 import com.maxpallu.go4lunch.models.Workmate;
 import com.maxpallu.go4lunch.util.ApiCalls;
 import com.maxpallu.go4lunch.util.PermissionUtils;
@@ -224,24 +220,31 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
             LatLng restaurantLatLng = new LatLng(restaurantLat, restaurantLng);
             updateColor(restaurantId, restaurantName, restaurantLatLng);
 
-            String name = restaurantName;
-            String adress = mRestaurants.get(i).getVicinity();
-            String phone = mRestaurants.get(i).getFormattedPhoneNumber();
-            String web = mRestaurants.get(i).getWebsite();
-
             mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override
                 public void onInfoWindowClick(Marker marker) {
-                    Intent intent = new Intent(getActivity(), DetailActivity.class);
-                    intent.putExtra("restaurantName", name);
-                    intent.putExtra("restaurantAdress", adress);
-                    intent.putExtra("restaurantPhone", phone);
-                    intent.putExtra("restaurantWeb", web);
 
-                    startActivity(intent);
-                }
+                    String id = (String) marker.getTag();
+                    DetailsResult mResults = getRestaurantsDetails(id);
+                        Intent intent = new Intent(getActivity(), DetailActivity.class);
+                        intent.putExtra("restaurantName", mResults.getName());
+                        intent.putExtra("restaurantAdress", mResults.getVicinity());
+                        intent.putExtra("restaurantPhone", mResults.getFormattedPhoneNumber());
+                        intent.putExtra("restaurantWeb", mResults.getWebsite());
+
+                        startActivity(intent);
+                    }
             });
         }
+    }
+
+    private DetailsResult getRestaurantsDetails(String id) {
+        for(int i =0; i<mRestaurants.size(); i++) {
+            if(mRestaurants.get(i).getPlaceId().equals(id)) {
+                return mRestaurants.get(i);
+            }
+        }
+        return null;
     }
 
     private void updateColor(String id, String name, LatLng latLng) {
@@ -262,12 +265,8 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
                     markerOptions.position(latLng)
                             .title(name)
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-                } else {
-                    markerOptions.position(latLng)
-                            .title(name)
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-
                 }
+
                 mMarker = mMap.addMarker(markerOptions);
                 mMarker.setTag(id);
             }
