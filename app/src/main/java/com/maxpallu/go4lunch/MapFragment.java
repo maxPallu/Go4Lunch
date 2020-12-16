@@ -56,10 +56,8 @@ public class MapFragment extends Fragment implements GoogleMap.OnMyLocationButto
     private boolean permissionDenied = false;
     private GoogleMap mMap;
     private Marker mMarker;
-    private SearchView searchView;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private GetRestaurantsDetails mDetails = new GetRestaurantsDetails();
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
     List<DetailsResult> mRestaurants = new ArrayList<>();
 
     public MapFragment() {

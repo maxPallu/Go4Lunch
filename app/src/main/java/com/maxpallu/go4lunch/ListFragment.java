@@ -41,7 +41,6 @@ import java.util.List;
     private Restaurants mRestaurants = new Restaurants();
     private PlaceDetailsResponse mDetails = new PlaceDetailsResponse();
     private MyAdapter mAdapter = new MyAdapter();
-    private Context context;
     private Boolean permissionDenied = false;
     private PlaceAutocomplete mResults;
 
