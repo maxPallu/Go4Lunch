@@ -68,8 +68,6 @@ public class DetailActivity extends AppCompatActivity {
     private String userId;
     private String CHANNEL_ID = "17";
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private AlarmManager alarmMgr;
-    private PendingIntent alarmIntent;
     private NotificationManager notificationManager;
     private Boolean createNotification = false;
 
